@@ -146,7 +146,7 @@ namespace KaraboAssignment.Controllers
                 }
                 //return View();
                 var result = await _signInManager.PasswordSignInAsync(registerViewModel.Email, registerViewModel.Password, false, lockoutOnFailure: false);
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("AdminIndex", "Dashboard");
             }
             return View();
         }

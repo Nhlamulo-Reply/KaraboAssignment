@@ -1,1 +1,30 @@
-﻿
+﻿@model KaraboAssignment.ViewModels.Product
+
+
+@{
+    //ViewData["Title"] = "Add Agri-Energy Product";
+}
+
+<h2 class="mb-4 text-success">Add New Agri-Energy Product</h2>
+
+<form asp-action="AddProduct" method="post" class="bg-white p-4 rounded shadow-sm border border-success">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label fw-bold">Product Name</label>
+        <input asp-for="Name" class="form-control" placeholder="e.g. Organic Spinach, Solar Beans" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Category" class="form-label fw-bold">Category</label>
+        <input asp-for="Category" class="form-control" placeholder="e.g. Vegetables, Biofuel, Solar-powered Produce" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ProductionDate" class="form-label fw-bold">Production Date</label>
+        <input asp-for="ProductionDate" type="date" class="form-control" />
+        <span asp-validation-for="ProductionDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Product</button>
+</form>
