@@ -11,7 +11,7 @@ namespace KaraboAssignment.ViewModels
         [DataType(DataType.Date)]
         public DateTime ProductionDate { get; set; }
 
-        public int?  FarmerId { get; set; }
+        public int? FarmerId { get; set; }
         public Farmer Farmer { get; set; }
     }
 }
