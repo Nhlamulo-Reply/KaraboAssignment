@@ -41,7 +41,7 @@ namespace KaraboAssignment.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
+ 
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -82,7 +82,7 @@ namespace KaraboAssignment.Controllers
                 if (userRole == UserRole.Farmers.GetDisplayName())
                     return RedirectToAction("Index", "Dashboard");
 
-                if (userRole == UserRole.Admin.GetDisplayName())
+                if (userRole == UserRole.Employees.GetDisplayName())
                     return RedirectToAction("AdminIndex", "Dashboard");
 
                 _logger.LogWarning("User {Email} has unknown role: {Role}", email, userRole);
@@ -135,7 +135,7 @@ namespace KaraboAssignment.Controllers
                 try
                 {
                     var userId = await _usersIO.CreateUser(registerViewModel);
-                    //await _walletManager.CreateUserWallet(ViewModelBuilder.CreateNewUserWallet(userId));
+               
 
                     await transaction.CommitAsync();
                 }
@@ -149,63 +149,6 @@ namespace KaraboAssignment.Controllers
                 return RedirectToAction("Index", "Dashboard");
             }
             return View();
-        }
-
-
-
-        [HttpPost]
-        public async Task<IActionResult> Registerss()
-        {
-            await _signInManager.SignOutAsync();
-            await HttpContext.SignOutAsync();
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Registerss(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                string email = model.Email?.Trim();
-                string password = model.Password;
-
-                if (!Validators.IsValidEmail(email))
-                {
-                    ModelState.AddModelError(nameof(model.Email), "Invalid email format.");
-                    _logger.LogWarning("Registration failed: Invalid email format {Email}.", email);
-                    return View(model);
-                }
-
-                if (!Validators.IsValidPassword(password))
-                {
-                    ModelState.AddModelError(nameof(model.Password), "Password must be 8+ characters, include uppercase, lowercase, number, and special character.");
-                    _logger.LogWarning("Registration failed: Weak password for {Email}.", email);
-                    return View(model);
-                }
-
-                var user = new ApplicationUser
-                {
-                    UserName = email,
-                    Email = email
-                };
-
-                var result = await _userManager.CreateAsync(user, password);
-
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User {Email} registered successfully.", email);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Login", "Account");
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    _logger.LogError("Registration error for {Email}: {Error}", email, error.Description);
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
-
-            return View(model);
         }
 
         [HttpPost]
