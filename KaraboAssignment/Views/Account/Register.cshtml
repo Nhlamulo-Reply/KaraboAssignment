@@ -1,0 +1,129 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model KaraboAssignment.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<link href="../assets/css/style-admin.css" rel="stylesheet">
+
+<div class="container">
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center" style="margin: 50px 0;">
+
+                    <!-- Logo -->
+                    <div class="d-flex justify-content-center py-4">
+                        <a href="/" class="logo d-flex align-items-center w-auto">
+                            <img src="~/assets/img/LogoIcon.png" alt="Logo">
+                            <span class="d-none d-lg-block" style="color:#61B834;">Agri-Energy</span>
+                            <span style="color:dodgerblue; margin-left:7px">Connect</span>
+                        </a>
+                    </div>
+
+                    <!-- Registration Card -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="pt-4 pb-2">
+                                <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                                <p class="text-center small">Enter your personal details to create an account</p>
+                            </div>
+
+                            <form class="row g-3 needs-validation" method="post" asp-action="Register" novalidate onsubmit="return ValidatePassword()">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+
+                                <div class="col-12">
+                                    <label asp-for="Firstname" class="form-label">Firstname</label>
+                                    <input asp-for="Firstname" class="form-control" required />
+                                    <span asp-validation-for="Firstname" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Lastname" class="form-label">Lastname</label>
+                                    <input asp-for="Lastname" class="form-control" required />
+                                    <span asp-validation-for="Lastname" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Email" class="form-label">Email</label>
+                                    <input asp-for="Email" class="form-control" type="email" required />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="PhoneNumber" class="form-label">Cellphone</label>
+                                    <input asp-for="PhoneNumber" class="form-control" type="tel" required />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Password" class="form-label">Password</label>
+                                    <input asp-for="Password" class="form-control" type="password" required id="Password" />
+                                    <ul class="small text-muted" style="list-style-type: square; margin-left: 20px; font-size: 12px; line-height: 1.4;">
+                                        <li>Must contain 8 or more characters</li>
+                                        <li>Must contain lowercase letter a–z</li>
+                                        <li>Must contain uppercase letter A–Z</li>
+                                        <li>Must contain a number 0–9</li>
+                                        <li>Must contain a special character ($%!^&*+=)</li>
+                                    </ul>
+                                    <span asp-validation-for="Password" class="text-danger" id="validPass"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                                    <input asp-for="ConfirmPassword" class="form-control" type="password" required />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="acceptTerms" required />
+                                        <label class="form-check-label" for="acceptTerms">
+                                            I agree and accept the <a href="#">terms and conditions</a>
+                                        </label>
+                                        <div class="invalid-feedback">You must agree before submitting.</div>
+                                    </div>
+                                    <span asp-validation-for="Terms" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100" type="submit">Create Account</button>
+                                </div>
+
+                                <div class="col-12">
+                                    <p class="small mb-0">Already have an account? <a asp-action="Login">Log in</a></p>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <!-- End Registration Card -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script>
+
+    localStorage['currentPage'] = 'Register';
+
+    function ValidatePassword() 
+    {
+        var validPass = CheckPassword($("#Password").val());
+        if (validPass == false) 
+        {
+            $("#validPass").text('The password must match all the requirements above');
+        }
+        return validPass;
+    }
+
+</script>
+
+<script src="../assets/js/jquery.js"></script>
