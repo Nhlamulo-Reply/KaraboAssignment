@@ -1,13 +1,16 @@
 ﻿@model KaraboAssignment.ViewModels.Product
 
 
+
 @{
-    //ViewData["Title"] = "Add Agri-Energy Product";
+    ViewData["Title"] = "Add Agri-Energy Product";
 }
 
 <h2 class="mb-4 text-success">Add New Agri-Energy Product</h2>
 
 <form asp-action="AddProduct" method="post" class="bg-white p-4 rounded shadow-sm border border-success">
+    @Html.AntiForgeryToken()
+
     <div class="mb-3">
         <label asp-for="Name" class="form-label fw-bold">Product Name</label>
         <input asp-for="Name" class="form-control" placeholder="e.g. Organic Spinach, Solar Beans" />
@@ -28,3 +31,7 @@
 
     <button type="submit" class="btn btn-success">Submit Product</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

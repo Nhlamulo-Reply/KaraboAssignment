@@ -28,20 +28,36 @@ public class FarmerController : Controller
     }
 
     [HttpGet]
-    public IActionResult AddProduct() => View();
+    public IActionResult AddProduct()
+    {
+        return View();
+    }
+      
 
     [HttpPost]
     public async Task<IActionResult> AddProduct(Product product)
     {
-        if (!ModelState.IsValid) return View(product);
+        if (!ModelState.IsValid)
+        {
+            return View(product);
+        }
 
         var user = await _userManager.GetUserAsync(User);
         var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == user.Email);
+
+        if (farmer == null)
+        {
+            ModelState.AddModelError("", "Farmer account not found.");
+            return View(product);
+        }
         product.FarmerId = farmer.FarmerId;
+
+
 
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("MyProducts");
+        TempData["Success"] = "Product added successfully!";
+        return RedirectToAction("AddProducts" , "Dashboard");
     }
 }

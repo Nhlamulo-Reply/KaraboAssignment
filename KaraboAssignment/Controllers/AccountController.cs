@@ -80,7 +80,7 @@ namespace KaraboAssignment.Controllers
                 _logger.LogInformation("User {Email} with role {Role} logged in successfully.", email, userRole);
 
                 if (userRole == UserRole.Farmers.GetDisplayName())
-                    return RedirectToAction("Index", "Dashboard");
+                    return RedirectToAction("AdminIndex", "Dashboard");
 
                 if (userRole == UserRole.Employees.GetDisplayName())
                     return RedirectToAction("AdminIndex", "Dashboard");
@@ -142,7 +142,7 @@ namespace KaraboAssignment.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    _logger.LogError($"There was an error registering new account with email {registerViewModel.Email}");
+                    _logger.LogError($"There was an error registering new account with email {registerViewModel.Email}", ex);
                 }
                 //return View();
                 var result = await _signInManager.PasswordSignInAsync(registerViewModel.Email, registerViewModel.Password, false, lockoutOnFailure: false);
