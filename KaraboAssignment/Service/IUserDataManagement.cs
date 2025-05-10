@@ -17,6 +17,8 @@ namespace KaraboAssignment.Service
 
         public Task<string> CreateUser(RegisterViewModel userViewModel);
 
+        public Task<string> CreatFarmer(Farmer farmer);
+
         public Task EditUser(UserDetailsViewModel userViewModel);
 
        // public Task UpdateUserAccountStatus(string userId, AccountStatus accountStatus);

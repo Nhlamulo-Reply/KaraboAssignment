@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace KaraboAssignment.ViewModels
+namespace KaraboAssignment.Models
 {
     public class Farmer
     {
@@ -10,6 +10,6 @@ namespace KaraboAssignment.ViewModels
         [Required]
         public string Email { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+       // public ICollection<Product> Products { get; set; }
     }
 }

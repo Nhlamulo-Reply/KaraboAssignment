@@ -2,34 +2,40 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="landing-container" style="font-family: Arial, sans-serif; padding: 40px;">
-    <div class="hero" style="text-align: center; margin-bottom: 40px;">
-        <h1 style="font-size: 3em; color: #2c3e50;">Karabo Farm Portal</h1>
-        <p style="font-size: 1.2em; color: #555;">Empowering Farmers and Connecting Clients to Fresh Produce</p>
-        <div style="margin-top: 30px;">
-            <a href="/Account/Register" class="btn" style="padding: 12px 25px; background-color: #27ae60; color: white; border-radius: 5px; text-decoration: none; margin-right: 15px;">Get Started</a>
-            <a href="/Account/Login" class="btn" style="padding: 12px 25px; background-color: #2980b9; color: white; border-radius: 5px; text-decoration: none;">Login</a>
-        </div>
-    </div>
+@using Microsoft.AspNetCore.Identity
 
-    <div class="features" style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 50px;">
-        <div style="flex: 1; min-width: 250px; max-width: 300px; padding: 20px; background: white; margin: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h3 style="color: #2c3e50;">🌿 Sell Farm Products</h3>
-            <p style="color: #555;">Farmers can list and manage their fresh products with ease.</p>
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="landing-container" style="font-family: Arial, sans-serif; padding: 40px;">
+        <div class="hero" style="text-align: center; margin-bottom: 40px;">
+            <h1 style="font-size: 3em; color: #2c3e50;">Karabo Farm Portal</h1>
+            <p style="font-size: 1.2em; color: #555;">Empowering Farmers and Connecting Clients to Fresh Produce</p>
+            <div style="margin-top: 30px;">
+                <a href="/Account/Register" class="btn" style="padding: 12px 25px; background-color: #27ae60; color: white; border-radius: 5px; text-decoration: none; margin-right: 15px;">Get Started</a>
+                <a href="/Account/Login" class="btn" style="padding: 12px 25px; background-color: #2980b9; color: white; border-radius: 5px; text-decoration: none;">Login</a>
+            </div>
         </div>
-        <div style="flex: 1; min-width: 250px; max-width: 300px; padding: 20px; background: white; margin: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h3 style="color: #2c3e50;">🛒 Order with Confidence</h3>
-            <p style="color: #555;">Clients can browse, order, and receive farm-fresh produce directly from farmers.</p>
-        </div>
-        <div style="flex: 1; min-width: 250px; max-width: 300px; padding: 20px; background: white; margin: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h3 style="color: #2c3e50;">📈 Track Sales</h3>
-            <p style="color: #555;">Farmers can monitor product performance and customer interest.</p>
-        </div>
-    </div>
 
-    <div style="text-align: center; margin-top: 60px;">
-        <p style="color: #888;">Need help? <a href="/Home/Contact" style="color: #2980b9;">Contact Us</a></p>
+        <div class="features" style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 50px;">
+            <div style="flex: 1; min-width: 250px; max-width: 300px; padding: 20px; background: white; margin: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <h3 style="color: #2c3e50;">🌿 Sell Farm Products</h3>
+                <p style="color: #555;">Farmers can list and manage their fresh products with ease.</p>
+            </div>
+            <div style="flex: 1; min-width: 250px; max-width: 300px; padding: 20px; background: white; margin: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <h3 style="color: #2c3e50;">🛒 Order with Confidence</h3>
+                <p style="color: #555;">Clients can browse, order, and receive farm-fresh produce directly from farmers.</p>
+            </div>
+            <div style="flex: 1; min-width: 250px; max-width: 300px; padding: 20px; background: white; margin: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <h3 style="color: #2c3e50;">📈 Track Sales</h3>
+                <p style="color: #555;">Farmers can monitor product performance and customer interest.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 60px;">
+            <p style="color: #888;">Need help? <a href="/Home/Contact" style="color: #2980b9;">Contact Us</a></p>
+        </div>
     </div>
-</div>
+}
+
 
 

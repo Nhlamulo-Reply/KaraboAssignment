@@ -2,8 +2,10 @@
 using KaraboAssignment.Service;
 using KaraboAssignment.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace KaraboAssignment.Controllers
 {
@@ -12,13 +14,17 @@ namespace KaraboAssignment.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly IProductService _productService;
-        public ApplicationDbContext Context => _context;
+        private readonly IUserDataManagement _usersIO;
+        private readonly ILogger<AccountController> _logger;
+    
+           
 
-
-        public EmployeeController(ApplicationDbContext context, IProductService productService)
+            public EmployeeController(ApplicationDbContext context, IProductService productService, ILogger<AccountController> logger, IUserDataManagement usersIO)
         {
             _context = context;
             _productService = productService;
+            _logger = logger;
+            _usersIO = usersIO;
         }
 
         [HttpGet]
@@ -45,16 +51,39 @@ namespace KaraboAssignment.Controllers
             return View();
         }
 
+       
+    
+
+
         [HttpPost]
         public async Task<IActionResult> AddFarmer(Farmer farmer)
         {
-            if (!ModelState.IsValid) return View(farmer);
 
-            Context.Farmers.Add(farmer);
-            await Context.SaveChangesAsync();
+            _logger.LogError($"Farmer  {farmer}");
 
-            return RedirectToAction("AddFarmer");
+            if (ModelState.IsValid)
+            {
+               
+                IDbContextTransaction transaction = _context.Database.BeginTransaction();
+                try
+                {
+                    var userId = await _usersIO.CreatFarmer(farmer);
+
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    _logger.LogError($"There was an error registering new account with email {farmer.Name}", ex);
+                }
+              
+                return RedirectToAction("AdminIndex", "Dashboard");
+            }
+            return View();
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> FilterProducts(string category, DateTime? startDate, DateTime? endDate, int? farmerId)

@@ -1,0 +1,94 @@
+﻿@model IEnumerable<KaraboAssignment.ViewModels.Product>
+
+@{
+    ViewData["Title"] = "Filter Products";
+}
+
+<nav aria-label="breadcrumb mt-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">  <a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Library</li>
+    </ol>
+</nav>
+
+
+<section class="section dashboard  mt-4">
+    <div class="card">
+        <div class="card-header text-center">
+            <h4>Filter Products</h4>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="FilterProducts" class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="category" class="form-control" placeholder="Enter category" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="startDate" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="endDate" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Farmer</label>
+                    <select name="farmerId" class="form-control">
+                        <option value="">All</option>
+                        @if (ViewBag.Farmers != null)
+                        {
+                            foreach (var farmer in ViewBag.Farmers)
+                            {
+                                <option value="@farmer.Id">@farmer.Name</option>
+                            }
+                        }
+
+                    </select>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </form>
+
+            <!-- Table of Filtered Products -->
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Production Date</th>
+                        <th>Farmer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr><td colspan="4" class="text-center">No products found.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>@product.Category</td>
+                                <td>@product.ProductionDate.ToShortDateString()</td>
+                                <td>@product.Farmer?.Name</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<script src="../assets/js/jquery.js"></script>
+
+<script>
+
+    new DataTable('#example');
+    localStorage['currentPage'] = 'Dashboard';
+
+</script>

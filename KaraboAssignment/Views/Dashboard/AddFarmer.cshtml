@@ -1,25 +1,29 @@
-﻿<h2 class="text-success mb-3">Add New Farmer</h2>
+﻿@model KaraboAssignment.ViewModels.Farmer
+
+<h2 class="text-success mb-3">Add New Farmer</h2>
 
 <form asp-action="AddFarmer" method="post" class="p-4 bg-light border rounded">
+    <!-- Display Validation Summary -->
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
     <div class="mb-3">
-        <label class="form-label fw-bold">Farmer Name</label>
-        <input name="Name" class="form-control" placeholder="Enter full name" />
+        <label class="form-label fw-bold" for="Name">Farmer Name</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter full name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label fw-bold">Email</label>
-        <input name="Email" type="email" class="form-control" placeholder="Enter email address" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-bold">Password</label>
-        <input name="Password" type="password" class="form-control" placeholder="Create password" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-bold">Confirm Password</label>
-        <input name="ConfirmPassword" type="password" class="form-control" placeholder="Repeat password" />
+        <label class="form-label fw-bold" for="Email">Email</label>
+        <input asp-for="Email" type="email" class="form-control" placeholder="Enter email address" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-success">Add Farmer</button>
 </form>
+
+<!-- Include jQuery and validation scripts -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

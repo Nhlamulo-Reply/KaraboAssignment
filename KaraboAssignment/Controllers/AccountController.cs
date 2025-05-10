@@ -46,8 +46,10 @@ namespace KaraboAssignment.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-
+        
             var email = model.Email?.Trim();
+
+           
 
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -60,6 +62,7 @@ namespace KaraboAssignment.Controllers
             if (result.Succeeded)
             {
                 var user = await _usersIO.GetUserByEmail(email);
+         
 
                 if (user == null)
                 {
@@ -106,7 +109,7 @@ namespace KaraboAssignment.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
 
-            return View(model);
+         return View(model);
         }
 
 

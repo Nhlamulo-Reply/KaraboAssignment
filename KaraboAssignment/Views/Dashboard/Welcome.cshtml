@@ -1,0 +1,44 @@
+﻿@model KaraboAssignment.ViewModels.UserDetailsViewModel
+
+@{
+    ViewData["Title"] = "Welcome Page";
+    var isFarmer = Model.UserRole == "Farmer";
+    var isEmployee = Model.UserRole == "Employee";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2>Welcome, @Model.Firstname!</h2>
+        <p class="lead">You are logged in as <strong>@Model.UserRole</strong></p>
+    </div>
+
+    <div class="row justify-content-center">
+        @if (isFarmer)
+        {
+            <div class="col-md-4">
+                <a asp-controller="Dashboard" asp-action="AddProducts" class="btn btn-success w-100 mb-3">
+                    ➕ Add Product
+                </a>
+            </div>
+        }
+
+        @if (isEmployee)
+        {
+            <div class="col-md-4">
+                <a asp-controller="Dashboard" asp-action="AddFarmer" class="btn btn-primary w-100 mb-3">
+                    👤 Add Farmer Profile
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a asp-controller="Dashboard" asp-action="FilterProducts" class="btn btn-warning w-100 mb-3">
+                    📦 Filter Products
+                </a>
+            </div>
+        }
+    </div>
+</div>
+<div class="col-md-4">
+</div>
+
+
+

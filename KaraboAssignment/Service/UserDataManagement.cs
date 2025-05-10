@@ -10,6 +10,7 @@ namespace KaraboAssignment.Service
     public class UserDataManagement : IUserDataManagement
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly Farmer _farmer;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
 
@@ -18,6 +19,7 @@ namespace KaraboAssignment.Service
             _dbContext = dbContext;
             _userManager = userManager;
             _roleManager = roleManager;
+         
         }
 
         public async Task<string> CreateUser(UserDetailsViewModel userViewModel)
@@ -53,7 +55,7 @@ namespace KaraboAssignment.Service
                 PhoneNumber = registerViewModel.PhoneNumber,
                 UserName = registerViewModel.Email,
                 Email = registerViewModel.Email,
-              //  AccountStatus = AccountStatus.Active
+                //  AccountStatus = AccountStatus.Active
             };
 
             _dbContext.Add(user);
@@ -63,9 +65,27 @@ namespace KaraboAssignment.Service
 
             var res = await _userManager.AddPasswordAsync(dbUser, registerViewModel.Password);
 
-            await _userManager.AddToRoleAsync(dbUser, UserRole.Client.GetDisplayName());
+            await _userManager.AddToRoleAsync(dbUser, UserRole.Farmers.GetDisplayName());
 
             return dbUser.Id;
+        }
+
+
+        public async Task<string> CreatFarmer(Farmer farmer)
+        {
+            var user = new Farmer
+            {
+                Name = farmer.Name,
+                Email = farmer.Email,
+              
+            };
+
+            _dbContext.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            var dbUser = await _dbContext.Farmers.FirstOrDefaultAsync(x => x.Email == farmer.Email);
+
+          return dbUser.FarmerId;
         }
 
         private async Task UpdateUserRole(ApplicationUser user, string newRole)

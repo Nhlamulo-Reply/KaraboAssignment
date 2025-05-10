@@ -28,7 +28,16 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Agri-Energy Connect</a>
+
+                @if (User.Identity.IsAuthenticated && !User.IsInRole(UserRole.Farmers.GetDisplayName()))
+                {
+                    <a class="navbar-brand">Agri-Energy Connect</a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">Agri-Energy Connect</a>
+                }
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -40,8 +49,8 @@
                         {
                             if (User.IsInRole(UserRole.Farmers.GetDisplayName()))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Farmer</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Profile">Profile</a></li>
+                                <li class="nav-item"><a class="nav-link" >Farmer</a></li>
+                                <li class="nav-item"><a class="nav-link">Profile</a></li>
                                 <li class="nav-item">
                                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                         <button type="submit" class="nav-link btn btn-link">Logout</button>
@@ -50,7 +59,7 @@
                             }
                             else if (User.IsInRole(UserRole.Employees.GetDisplayName()))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Admin</a></li>
+                                <li class="nav-item"><a class="nav-link" >Admin</a></li>
                                 <li class="nav-item">
                                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                         <button type="submit" class="nav-link btn btn-link">Logout</button>
@@ -60,9 +69,9 @@
                         }
                         else
                         {
-                             <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="AdminIndex">admin</a></li>
+                           /*<li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="AdminIndex">admin</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="AddFarmer">Famern</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="Index">index</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="Index">index</a></li>*/
                             <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="AddProducts">About</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>

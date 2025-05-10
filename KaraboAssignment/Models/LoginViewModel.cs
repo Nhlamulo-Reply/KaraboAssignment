@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace KaraboAssignment.ViewModels
+namespace KaraboAssignment.Models
 {
     public class LoginViewModel
     {

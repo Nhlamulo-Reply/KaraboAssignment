@@ -23,12 +23,14 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 
 // Register IUserDataManagement if not already
 builder.Services.AddScoped<IUserDataManagement, UserDataManagement>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
 
 // Add controllers and views
 builder.Services.AddControllersWithViews();
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-//.AddEntityFrameworkStores<ApplicationDbContext>();
+    //.AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
 

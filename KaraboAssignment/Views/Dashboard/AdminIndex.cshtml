@@ -1,44 +1,69 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<h1>Welcome Admin</h1>
-
-@model KaraboAssignment.ViewModels.UserDetailsViewModel
+﻿@model KaraboAssignment.ViewModels.UserDetailsViewModel
+@using KaraboAssignment.Enums
 
 @{
-    //ViewData["Title"] = "Welcome Page";
-   // var isFarmer = Model.UserRole == "Farmer";
-   // var isEmployee = Model.UserRole == "Employee";
+    ViewData["Title"] = "Welcome Page";
+
+    var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+    var isFarmer = isAuthenticated && User.IsInRole(UserRole.Farmers.GetDisplayName());
+    var isEmployee = isAuthenticated && User.IsInRole(UserRole.Employees.GetDisplayName());
 }
 
 <div class="container mt-5">
-    <div class="text-center mb-4">
-        <h2>Welcome, </h2>
-        <p class="lead">You are logged in as <strong></strong></p>
-    </div>
 
-    <div class="row justify-content-center">
-      
-            <div class="col-md-4">
-                <a  asp-controller="Dashboard" asp-action="AddProducts" class="btn btn-success w-100 mb-3">
-                    ➕ Add Product
-                </a>
-            </div>
-     
+    <p>@Model</p>
 
-      
-            <div class="col-md-4">
-                <a  asp-controller="Dashboard" asp-action="AddFarmer" class="btn btn-primary w-100 mb-3">
-                    👤 Add Farmer Profile
-                </a>
-            </div>
-            <div class="col-md-4">
-                <a  asp-controller="Dashboard" asp-action="FilterProducts" class="btn btn-warning w-100 mb-3">
-                    📦 Filter Products
-                </a>
-            </div>
-        
-    </div>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="alert alert-warning text-center">
+            You are not logged in. Please <a href="/Account/Login">log in</a>.
+        </div>
+    }
+    else if (User.Identity.IsAuthenticated)
+    {
+        <div class="text-center mb-4">
+            <h2>Welcome</h2>
+            <p class="lead">You are logged in as <strong></strong></p>
+        </div>
+
+        <div class="row justify-content-center">
+            @if (User.IsInRole(UserRole.Employees.GetDisplayName()))
+            {
+                <div class="col-md-4">
+                    <a asp-controller="Dashboard" asp-action="AddFarmer" class="btn btn-primary w-100 mb-3">
+                        👤 Add Farmer Profile
+                    </a>
+                </div>
+               
+                <div class="col-md-4">
+                    <a asp-controller="Dashboard" asp-action="FilterProducts" class="btn btn-warning w-100 mb-3">
+                        📦 Filter Products
+                    </a>
+                </div>
+            }
+
+            @if (User.IsInRole(UserRole.Farmers.GetDisplayName()))
+            {
+              
+                <div class="col-md-4">
+                    <a asp-controller="Dashboard" asp-action="AddProducts" class="btn btn-success w-100 mb-3">
+                        ➕ Add Product
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a asp-controller="Dashboard" asp-action="AddProducts" class="btn btn-success w-100 mb-3">
+                        ➕ View Product
+                    </a>
+                </div>
+          
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            Something went wrong. No user data was provided.
+        </div>
+    }
+
 </div>
