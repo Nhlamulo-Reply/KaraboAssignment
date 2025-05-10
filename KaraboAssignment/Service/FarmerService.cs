@@ -10,10 +10,11 @@ namespace KaraboAssignment.Service
         private readonly ApplicationDbContext _context;
         private readonly ILogger _logger;
         private UserManager<IdentityUser> _userManager;
-        public FarmerService(ApplicationDbContext context, UserManager<IdentityUser> UserManager)
+        public FarmerService(ApplicationDbContext context, UserManager<IdentityUser> UserManager, ILogger logger)
         {
           _context = context;
           _userManager = UserManager;
+          _logger = logger;
         
         }
         public Task AddProductAsync(Product product)

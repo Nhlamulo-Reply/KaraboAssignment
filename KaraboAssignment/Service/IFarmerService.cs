@@ -8,5 +8,6 @@ namespace KaraboAssignment.Service
         Task AddProductAsync(Product product);
         Task DeleteProductAsync(int id);
         Task<Product> GetProductByIdAsync(int id);
+     
     }
 }

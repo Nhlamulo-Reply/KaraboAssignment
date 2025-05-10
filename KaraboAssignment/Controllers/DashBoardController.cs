@@ -1,11 +1,14 @@
 ﻿using KaraboAssignment.Data;
 using KaraboAssignment.Service;
-using KaraboAssignment.ViewModels;
+
+using KaraboAssignment.Models;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+
 
 namespace KaraboAssignment.Controllers
 {
@@ -14,17 +17,20 @@ namespace KaraboAssignment.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly IProductService _productService;
+        /*private readonly IFarmerService _farmerService;*/
         private readonly IUserDataManagement _usersIO;
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<DashBoardController> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
 
 
-        public DashBoardController(ApplicationDbContext context, IProductService productService, ILogger<AccountController> logger, IUserDataManagement usersIO)
+        public DashBoardController(ApplicationDbContext context, IProductService productService, ILogger<DashBoardController> logger, IUserDataManagement usersIO)
         {
             _context = context;
             _productService = productService;
             _logger = logger;
             _usersIO = usersIO;
+          
         }
 
 
@@ -38,12 +44,90 @@ namespace KaraboAssignment.Controllers
             return View();
         }
 
-        [HttpPost]
+
+        [HttpGet]
         public IActionResult AddFarmer()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddFarmer(Models.Farmer farmer)
+        {
+
+            _logger.LogError($"Farmer  {farmer}");
+
+            if (ModelState.IsValid)
+            {
+
+                IDbContextTransaction transaction = _context.Database.BeginTransaction();
+                try
+                {
+                    //Add Farmer into the db function
+                    var userId = await _usersIO.CreatFarmer(farmer);
+
+                    _logger.LogInformation("Created farmer {Id}", userId);
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    _logger.LogError($"There was an error registering new account with email {farmer.Email}", ex);
+                }
+
+                return RedirectToAction("AdminIndex", "Dashboard");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AddProducts()
         {
             return View();
         }
-        public IActionResult AddProducts()
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddProducts(Product viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User not found.");
+                return View(viewModel);
+            }
+
+            var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == user.Email);
+            if (farmer == null)
+            {
+                ModelState.AddModelError("", "Farmer account not found.");
+                return View(viewModel);
+            }
+
+            var products = new Product
+            {
+                Name = viewModel.Name,
+                Price = viewModel.Price,
+                FarmerName = viewModel.FarmerName,
+                FarmerId = farmer.FarmerId
+            };
+
+           // _context.Products.Add(products);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Product added successfully!";
+            return RedirectToAction("AddProducts", "Dashboard");
+        }
+
+
+
+        public IActionResult ViewProducts()
         {
             return View();
         }

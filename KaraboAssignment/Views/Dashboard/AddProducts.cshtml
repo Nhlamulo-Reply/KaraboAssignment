@@ -8,29 +8,114 @@
 
 <h2 class="mb-4 text-success">Add New Agri-Energy Product</h2>
 
-<form asp-action="AddProducts" method="post" class="bg-white p-4 rounded shadow-sm border border-success">
-    @Html.AntiForgeryToken()
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h2 class="mb-0"><i class="fas fa-leaf me-2"></i>Add New Agri-Energy Product</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AddProducts" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label fw-bold">Product Name</label>
-        <input asp-for="Name" class="form-control" placeholder="e.g. Organic Spinach, Solar Beans" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="row g-3">
+                            <!-- Product Information -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Name" class="form-control" placeholder=" " required />
+                                    <label asp-for="Name" class="fw-bold">Product Name</label>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                    <div class="invalid-feedback">
+                                        Please provide a product name
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Category" class="form-select" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Vegetables">Vegetables</option>
+                                        <option value="Fruits">Fruits</option>
+                                        <option value="Grains">Grains</option>
+                                        <option value="Biofuel">Biofuel</option>
+                                        <option value="Solar">Solar-powered Produce</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <label asp-for="Category" class="fw-bold">Category</label>
+                                    <span asp-validation-for="Category" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Production Details -->
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="ProductionDate" type="date" class="form-control" required
+                                           max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <label asp-for="ProductionDate" class="fw-bold">Production Date</label>
+                                    <span asp-validation-for="ProductionDate" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="ExpiryDate" type="date" class="form-control"
+                                           min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <label asp-for="ExpiryDate" class="fw-bold">Expiry Date (Optional)</label>
+                                    <span asp-validation-for="ExpiryDate" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                        
+
+                            <!-- Pricing & Quantity -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder=" " required />
+                                    <label asp-for="Price" class="fw-bold">Price (ZAR)</label>
+                                    <span asp-validation-for="Price" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Quantity" type="number" class="form-control" placeholder=" " required />
+                                    <label asp-for="Quantity" class="fw-bold">Quantity</label>
+                                    <span asp-validation-for="Quantity" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea asp-for="Description" class="form-control" placeholder=" "
+                                              style="height: 100px"></textarea>
+                                    <label asp-for="Description" class="fw-bold">Product Description</label>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                    <small class="form-text text-muted">Describe any special features or certifications</small>
+                                </div>
+                            </div>
+
+
+                          
+
+                            <!-- Form Actions -->
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-success btn-lg me-2">
+                                    <i class="fas fa-save me-2"></i>Submit Product
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary">
+                                    <i class="fas fa-undo me-2"></i>Reset Form
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Category" class="form-label fw-bold">Category</label>
-        <input asp-for="Category" class="form-control" placeholder="e.g. Vegetables, Biofuel, Solar-powered Produce" />
-        <span asp-validation-for="Category" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="ProductionDate" class="form-label fw-bold">Production Date</label>
-        <input asp-for="ProductionDate" type="date" class="form-control" />
-        <span asp-validation-for="ProductionDate" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Submit Product</button>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

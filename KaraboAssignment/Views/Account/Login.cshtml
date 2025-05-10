@@ -1,4 +1,4 @@
-﻿@model KaraboAssignment.ViewModels.LoginViewModel
+﻿@model KaraboAssignment.Models.LoginViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -46,20 +46,11 @@
                                     <div class="invalid-feedback">Please enter your password!</div>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" asp-for="RememberMe" type="checkbox" name="remember" value="true" id="rememberMe">
-                                        <label class="form-check-label" for="rememberMe">Remember me</label>
-                                    </div>
-                                </div>
+                              
                                 <div class="col-12">
                                     <button class="btn w-100 login-btn" type="submit">Login</button>
                                 </div>
-                                <div class="col-12">
-                                    <p>
-                                        <a class="small" id="forgot-password">Forgot your password?</a>
-                                    </p>
-                                </div>
+                            
                                 <div class="col-12">
                                     <p class="small mb-0">Don't have account? <a asp-action="Register">Create an account</a></p>
                                 </div>

@@ -2,7 +2,7 @@
 using KaraboAssignment.Enums;
 using KaraboAssignment.Helpers;
 using KaraboAssignment.Service;
-using KaraboAssignment.ViewModels;
+using KaraboAssignment.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

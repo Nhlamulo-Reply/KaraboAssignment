@@ -1,7 +1,7 @@
 ﻿using KaraboAssignment.Controllers;
 using KaraboAssignment.Data;
 using KaraboAssignment.Enums;
-using KaraboAssignment.ViewModels;
+using KaraboAssignment.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -73,19 +73,48 @@ namespace KaraboAssignment.Service
 
         public async Task<string> CreatFarmer(Farmer farmer)
         {
-            var user = new Farmer
+            try
             {
-                Name = farmer.Name,
-                Email = farmer.Email,
-              
-            };
+                // First create the Identity user
+                var user = new ApplicationUser
+                {
+                    UserName = farmer.Email,
+                    Email = farmer.Email,
+                    Firstname = farmer.Name.Split(' ')[0],
+                    Lastname = farmer.Name.Split(' ').Length > 1 ? farmer.Name.Split(' ')[1] : "",
+               
+                };
 
-            _dbContext.Add(user);
-            await _dbContext.SaveChangesAsync();
+                var result = await _userManager.CreateAsync(user, "TempPassword123!");
 
-            var dbUser = await _dbContext.Farmers.FirstOrDefaultAsync(x => x.Email == farmer.Email);
+                if (!result.Succeeded)
+                {
+                    throw new Exception($"User creation failed: {string.Join(", ", result.Errors)}");
+                }
 
-          return dbUser.FarmerId;
+                // Add to Farmer role
+                await _userManager.AddToRoleAsync(user, UserRole.Farmers.GetDisplayName());
+
+                // Then create the Farmer record
+                var farmerRecord = new Farmer
+                {
+                    //FarmerId = Guid.NewGuid(),
+                    Name = farmer.Name,
+                    Email = farmer.Email,
+                    //PhoneNumber = farmer.PhoneNumber,
+                   // UserId = user.Id // Link to Identity user
+                };
+
+               // _dbContext.Farmers.Add();
+                await _dbContext.SaveChangesAsync();
+
+                return farmerRecord.FarmerId;
+            }
+            catch (Exception ex)
+            {
+                
+                throw;
+            }
         }
 
         private async Task UpdateUserRole(ApplicationUser user, string newRole)
@@ -217,5 +246,12 @@ namespace KaraboAssignment.Service
             _dbContext.Remove(dbUser);
             await _dbContext.SaveChangesAsync();
         }
+
+
+        Task<List<Models.UserDetailsViewModel>> IUserDataManagement.GetAllUsersDetails()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

@@ -19,17 +19,17 @@ namespace KaraboAssignment.Service
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetFarmerProductsAsync(int farmerId)
+        public async Task<IEnumerable<Product>> GetFarmerProductsAsync(Guid farmerId)
         {
             return await _context.Products
-                .Include(p => p.Farmer)
+                .Include(p => p.FarmerName)
                 .Where(p => p.FarmerId == farmerId)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> FilterProductsAsync(string category, DateTime? start, DateTime? end, int? farmerId)
+        public async Task<IEnumerable<Product>> FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
         {
-            var query = _context.Products.Include(p => p.Farmer).AsQueryable();
+            var query = _context.Products.Include(p => p.FarmerName).AsQueryable();
 
             if (!string.IsNullOrEmpty(category))
                 query = query.Where(p => p.Category.Contains(category));
@@ -38,10 +38,11 @@ namespace KaraboAssignment.Service
                 query = query.Where(p => p.ProductionDate >= start && p.ProductionDate <= end);
 
             if (farmerId.HasValue)
-                query = query.Where(p => p.FarmerId == farmerId);
+                query = query.Where(p => p.FarmerId == farmerId.Value);
 
             return await query.ToListAsync();
         }
+
     }
 
 

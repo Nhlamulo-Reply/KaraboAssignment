@@ -26,6 +26,7 @@ builder.Services.AddScoped<IUserDataManagement, UserDataManagement>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 
+
 // Add controllers and views
 builder.Services.AddControllersWithViews();
 

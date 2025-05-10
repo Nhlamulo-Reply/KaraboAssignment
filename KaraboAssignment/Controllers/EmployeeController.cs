@@ -1,11 +1,12 @@
 ﻿using KaraboAssignment.Data;
 using KaraboAssignment.Service;
-using KaraboAssignment.ViewModels;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using KaraboAssignment.Models;
 
 namespace KaraboAssignment.Controllers
 {
@@ -27,8 +28,9 @@ namespace KaraboAssignment.Controllers
             _usersIO = usersIO;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index(string category, DateTime? startDate, DateTime? endDate, int? farmerId)
+
+        /*  [HttpGet]
+        public async Task<IActionResult> Index(string category, DateTime? startDate, DateTime? endDate, Guid farmerId)
         {
             ViewBag.Farmers = await _context.Farmers.ToListAsync();
 
@@ -39,8 +41,7 @@ namespace KaraboAssignment.Controllers
         }
 
 
-
-        /* [Authorize(Roles = "Employee")]*/
+ [Authorize(Roles = "Employee")]*/
 
 
 
@@ -86,7 +87,7 @@ namespace KaraboAssignment.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> FilterProducts(string category, DateTime? startDate, DateTime? endDate, int? farmerId)
+        public async Task<IActionResult> FilterProducts(string category, DateTime? startDate, DateTime? endDate, Guid farmerId)
         {
             ViewBag.Farmers = await _context.Farmers.ToListAsync();
             var products = await _productService.FilterProductsAsync(category, startDate, endDate, farmerId);

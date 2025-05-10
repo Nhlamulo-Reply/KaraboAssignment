@@ -11,7 +11,28 @@ namespace KaraboAssignment.Models
         [DataType(DataType.Date)]
         public DateTime ProductionDate { get; set; }
 
-        public int? FarmerId { get; set; }
-        public Farmer Farmer { get; set; }
+        public Farmer? Farmer { get; set; }
+
+        public Guid Id { get; set; }
+             
+
+        [DataType(DataType.Date)]
+        [Display(Name = "Production Date")]
+  
+        public DateTime? ExpiryDate { get; set; }
+
+        public string Description { get; set; }
+
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+
+        public int Quantity { get; set; }
+
+        [Display(Name = "Farmer")]
+        public string FarmerName { get; set; }
+
+        public Guid FarmerId { get; set; }
+
+
     }
 }

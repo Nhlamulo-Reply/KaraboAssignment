@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Filter Products";
+}
+
+<nav aria-label="breadcrumb mt-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Product Library</li>
+    </ol>
+</nav>
+
+<section class="section dashboard mt-4">
+    <div class="card">
+        <div class="card-header text-center">
+            <h4>Filter Products</h4>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="FilterProducts" class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="category" class="form-control"
+                           placeholder="Enter category" value="@Context.Request.Query["category"]" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="startDate" class="form-control"
+                           value="@Context.Request.Query["startDate"]" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="endDate" class="form-control"
+                           value="@Context.Request.Query["endDate"]" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Farmer</label>
+                    <select name="farmerId" class="form-control">
+                        <option value="">All Farmers</option>
+                        @foreach (var farmer in ViewBag.Farmers)
+                        {
+                            <option value="@farmer.Id"
+                                    selected="@(Context.Request.Query["farmerId"] == farmer.Id.ToString())">
+                                @farmer.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a asp-action="FilterProducts" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+
+            <!-- Table of Filtered Products -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="productsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Production Date</th>
+                            <th>Expiry Date</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Farmer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || !Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center">No products found matching your criteria.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var product in Model)
+                            {
+                                <tr>
+                                    <td>@product.Name</td>
+                                    <td>@product.Category</td>
+                                    <td>@product.ProductionDate.ToShortDateString()</td>
+                                    
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#productsTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50, 100],
+                order: [[2, 'desc']] // Sort by Production Date by default
+            });
+        });
+    </script>
+}

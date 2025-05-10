@@ -1,5 +1,5 @@
 ﻿using KaraboAssignment.Data;
-using KaraboAssignment.ViewModels;
+using KaraboAssignment.Models;
 
 namespace KaraboAssignment.Service
 {
@@ -15,7 +15,7 @@ namespace KaraboAssignment.Service
 
         public Task<string> CreateUser(UserDetailsViewModel userViewModel);
 
-        public Task<string> CreateUser(RegisterViewModel userViewModel);
+        public Task<string> CreateUser(RegisterViewModel registerViewModel);
 
         public Task<string> CreatFarmer(Farmer farmer);
 

@@ -2,28 +2,54 @@
 
 <h2 class="text-success mb-3">Add New Farmer</h2>
 
+
 <form asp-action="AddFarmer" method="post" class="p-4 bg-light border rounded">
-    <!-- Display Validation Summary -->
     <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
     <div class="mb-3">
-        <label class="form-label fw-bold" for="Name">Farmer Name</label>
+        <label class="form-label fw-bold" asp-for="Name">Farmer Name</label>
         <input asp-for="Name" class="form-control" placeholder="Enter full name" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label fw-bold" for="Email">Email</label>
+        <label class="form-label fw-bold" asp-for="Email">Email</label>
         <input asp-for="Email" type="email" class="form-control" placeholder="Enter email address" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
+    <!-- If Products is a string, you can keep this. If it's a list, consider a different input. -->
+    <div class="mb-3">
+        <label class="form-label fw-bold" asp-for="Products">Products</label>
+        <input asp-for="Products" class="form-control" placeholder="Enter product names" />
+        <span asp-validation-for="Products" class="text-danger"></span>
+    </div>
+
+
+
     <button type="submit" class="btn btn-success">Add Farmer</button>
 </form>
 
-<!-- Include jQuery and validation scripts -->
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+
+
+    <script>
+        document.getElementById('addProduct').onclick = function () {
+            var productsContainer = document.querySelector('.form-label:contains("Products")').parentElement;
+            var productIndex = productsContainer.querySelectorAll('.mb-3').length / 2; // Find the number of existing products
+
+            // Dynamically create new product fields
+            var productNameField = document.createElement('input');
+            productNameField.name = `Products[${productIndex}].Name`;
+            productNameField.placeholder = 'Enter product name';
+            productNameField.classList.add('form-control');
+            productsContainer.appendChild(productNameField);
+
+            var productPriceField = document.createElement('input');
+            productPriceField.name = `Products[${productIndex}].Price`;
+            productPriceField.placeholder = 'Enter product price';
+            productPriceField.classList.add('form-control');
+            productsContainer.appendChild(productPriceField);
+        };
+    </script>
 }
