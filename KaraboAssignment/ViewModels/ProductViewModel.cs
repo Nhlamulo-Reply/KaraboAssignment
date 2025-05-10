@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KaraboAssignment.ViewModels
 {
-    public class Product
+    public class ProductViewModel
     {
         public Guid Id { get; set; }
 

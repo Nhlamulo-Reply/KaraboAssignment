@@ -1,8 +1,6 @@
 ﻿using KaraboAssignment.Data;
 using KaraboAssignment.Service;
-
 using KaraboAssignment.Models;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +28,7 @@ namespace KaraboAssignment.Controllers
             _productService = productService;
             _logger = logger;
             _usersIO = usersIO;
-          
+
         }
 
 
@@ -89,52 +87,49 @@ namespace KaraboAssignment.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddProducts(Product viewModel)
+        public async Task<IActionResult> AddProducts(Product product)
         {
             if (!ModelState.IsValid)
             {
-                return View(viewModel);
+                return View(product);
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
             {
-                ModelState.AddModelError("", "User not found.");
-                return View(viewModel);
+                _logger.LogWarning("Products from the form", product);
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "User not found.");
+                    return View(product);
+                }
+
+                var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == user.Email);
+                if (farmer == null)
+                {
+                    ModelState.AddModelError("", "Farmer account not found.");
+                    return View(product);
+                }
+
+                var products = new Product
+                {
+                    Name = product.Name,
+                    Price = product.Price,
+                    FarmerName = farmer.Name,
+                    
+
+                };
+
+                _logger.LogWarning("All products to be added  from the form", products);
+                _context.Products.Add(products);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "Product added successfully!";
+                return RedirectToAction("AddProducts", "Dashboard");
             }
 
-            var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == user.Email);
-            if (farmer == null)
-            {
-                ModelState.AddModelError("", "Farmer account not found.");
-                return View(viewModel);
-            }
-
-            var products = new Product
-            {
-                Name = viewModel.Name,
-                Price = viewModel.Price,
-                FarmerName = viewModel.FarmerName,
-                FarmerId = farmer.FarmerId
-            };
-
-           // _context.Products.Add(products);
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Product added successfully!";
-            return RedirectToAction("AddProducts", "Dashboard");
-        }
 
 
-
-        public IActionResult ViewProducts()
-        {
-            return View();
-        }
-
-        public IActionResult FilterProducts()
-        {
-            return View();
+          
         }
     }
 }

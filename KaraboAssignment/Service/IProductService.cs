@@ -1,4 +1,4 @@
-﻿using KaraboAssignment.ViewModels;
+﻿using KaraboAssignment.Models;
 
 namespace KaraboAssignment.Service
 {

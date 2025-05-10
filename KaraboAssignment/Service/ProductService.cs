@@ -1,4 +1,5 @@
 ﻿using KaraboAssignment.Data;
+using KaraboAssignment.Models;
 using KaraboAssignment.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,11 @@ namespace KaraboAssignment.Service
             await _context.SaveChangesAsync();
         }
 
+        public Task<IEnumerable<Product>> FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<Product>> GetFarmerProductsAsync(Guid farmerId)
         {
             return await _context.Products
@@ -27,7 +33,9 @@ namespace KaraboAssignment.Service
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
+
+
+       /* public async Task<IEnumerable<Product>> IProductService.FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
         {
             var query = _context.Products.Include(p => p.FarmerName).AsQueryable();
 
@@ -41,8 +49,7 @@ namespace KaraboAssignment.Service
                 query = query.Where(p => p.FarmerId == farmerId.Value);
 
             return await query.ToListAsync();
-        }
-
+        }*/
     }
 
 

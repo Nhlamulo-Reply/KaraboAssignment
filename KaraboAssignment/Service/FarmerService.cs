@@ -17,7 +17,7 @@ namespace KaraboAssignment.Service
           _logger = logger;
         
         }
-        public Task AddProductAsync(Product product)
+        public Task AddProductAsync(ProductViewModel product)
         {
             throw new NotImplementedException();
         }
@@ -27,12 +27,12 @@ namespace KaraboAssignment.Service
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Product>> GetAllProductsAsync()
+        public Task<IEnumerable<ProductViewModel>> GetAllProductsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetProductByIdAsync(int id)
+        public Task<ProductViewModel> GetProductByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

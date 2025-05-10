@@ -1,5 +1,5 @@
 ﻿using KaraboAssignment.Data;
-using KaraboAssignment.ViewModels;
+using KaraboAssignment.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +44,7 @@ namespace KaraboAssignment.Data
 
         public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
 
-        public DbSet<Farmer> Farmers { get; set; }
+       public DbSet<Farmer> Farmers { get; set; }
         public DbSet<Product> Products { get; set; }
 
 

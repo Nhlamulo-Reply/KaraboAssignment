@@ -10,6 +10,8 @@ namespace KaraboAssignment.Models
         [Required]
         public string? Email { get; set; }
 
+
+
        // public ICollection<Product> Products { get; set; }
     }
 }

@@ -4,10 +4,10 @@ namespace KaraboAssignment.Service
 {
     public interface IFarmerService
     {
-        Task<IEnumerable<Product>> GetAllProductsAsync();
-        Task AddProductAsync(Product product);
+        Task<IEnumerable<ProductViewModel>> GetAllProductsAsync();
+        Task AddProductAsync(ProductViewModel product);
         Task DeleteProductAsync(int id);
-        Task<Product> GetProductByIdAsync(int id);
+        Task<ProductViewModel> GetProductByIdAsync(int id);
      
     }
 }
