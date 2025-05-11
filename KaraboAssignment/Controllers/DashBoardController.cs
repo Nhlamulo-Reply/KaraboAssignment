@@ -1,82 +1,78 @@
 ﻿using KaraboAssignment.Data;
 using KaraboAssignment.Service;
 using KaraboAssignment.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace KaraboAssignment.Controllers
 {
     public class DashBoardController : Controller
     {
-
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _dbContext;
         private readonly IProductService _productService;
-        /*private readonly IFarmerService _farmerService;*/
         private readonly IUserDataManagement _usersIO;
         private readonly ILogger<DashBoardController> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-
-
-        public DashBoardController(ApplicationDbContext context, IProductService productService, ILogger<DashBoardController> logger, IUserDataManagement usersIO)
+        public DashBoardController(
+            ApplicationDbContext context,
+            IProductService productService,
+            ILogger<DashBoardController> logger,
+            IUserDataManagement usersIO,
+              UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _dbContext = context;
             _productService = productService;
             _logger = logger;
             _usersIO = usersIO;
-
+            _userManager = userManager;
         }
-
-
 
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult AdminIndex()
         {
             return View();
         }
 
-
         [HttpGet]
         public IActionResult AddFarmer()
         {
-
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFarmer(Models.Farmer farmer)
+        public async Task<IActionResult> AddFarmer(Farmer farmer)
         {
+            _logger.LogInformation("Attempting to register farmer: {Farmer}", farmer);
 
-            _logger.LogError($"Farmer  {farmer}");
+            if (!ModelState.IsValid)
+                return View(farmer);
 
-            if (ModelState.IsValid)
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
             {
-
-                IDbContextTransaction transaction = _context.Database.BeginTransaction();
-                try
-                {
-                    //Add Farmer into the db function
-                    var userId = await _usersIO.CreatFarmer(farmer);
-
-                    _logger.LogInformation("Created farmer {Id}", userId);
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    _logger.LogError($"There was an error registering new account with email {farmer.Email}", ex);
-                }
+                var userId = await _usersIO.CreatFarmer(farmer);
+                _logger.LogInformation("Successfully created farmer with ID: {Id}", userId);
+                await transaction.CommitAsync();
 
                 return RedirectToAction("AdminIndex", "Dashboard");
             }
-            return View();
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error registering farmer with email: {Email}", farmer.Email);
+                ModelState.AddModelError("", "An error occurred while registering the farmer.");
+                return View(farmer);
+            }
         }
 
         [HttpGet]
@@ -87,48 +83,66 @@ namespace KaraboAssignment.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddProducts(Product product)
+        public async Task<IActionResult> AddProduct(Product productModel)
         {
+
             if (!ModelState.IsValid)
             {
-                return View(product);
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        _logger.LogError("Model error in field {Field}: {ErrorMessage}", state.Key, error.ErrorMessage);
+                    }
+                }
+                return View("AddProducts", productModel);
             }
 
+
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
             {
-                _logger.LogWarning("Products from the form", product);
+                // Get the currently logged-in user
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
                     ModelState.AddModelError("", "User not found.");
-                    return View(product);
+                    return View("AddProducts", productModel);
                 }
 
-                var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == user.Email);
+                // Match user with Farmer profile
+                var farmer = await _dbContext.Farmers.FirstOrDefaultAsync(f => f.UserId == user.Id);
                 if (farmer == null)
                 {
-                    ModelState.AddModelError("", "Farmer account not found.");
-                    return View(product);
+                    ModelState.AddModelError("", "Farmer profile not found.");
+                    return View("AddProducts", productModel);
                 }
 
-                var products = new Product
-                {
-                    ProductName = product.ProductName,
-                    FarmerId = farmer.FarmerId,
-                    
+                // Assign the FarmerId to the product
+                productModel.FarmerId = farmer.FarmerId;
 
-                };
+        
+               await _productService.AddProductAsync(productModel);
 
-                _logger.LogWarning("All products to be added  from the form", products);
-                _context.Products.Add(products);
-                await _context.SaveChangesAsync();
+
+                // Commit DB transaction
+                await transaction.CommitAsync();
 
                 TempData["Success"] = "Product added successfully!";
                 return RedirectToAction("AddProducts", "Dashboard");
             }
-
-
-
-          
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Failed to add product");
+                ModelState.AddModelError("", "An error occurred while adding the product.");
+                return View("AddProducts", productModel);
+            }
         }
+
+
+
+
+
     }
 }

@@ -46,29 +46,33 @@ namespace KaraboAssignment.Service
             return dbUser.Id;
         }
 
-        public async Task<string> CreateUser(RegisterViewModel registerViewModel)
+        public async Task<string> CreateUser(RegisterViewModel registerModel)
         {
             var user = new ApplicationUser
             {
-                Firstname = registerViewModel.Firstname,
-                Lastname = registerViewModel.Lastname,
-                PhoneNumber = registerViewModel.PhoneNumber,
-                UserName = registerViewModel.Email,
-                Email = registerViewModel.Email,
+                Firstname = registerModel.Firstname,
+                Lastname = registerModel.Lastname,
+                PhoneNumber = registerModel.PhoneNumber,
+                UserName = registerModel.Email,
+                Email = registerModel.Email,
                 //  AccountStatus = AccountStatus.Active
             };
 
             _dbContext.Add(user);
             await _dbContext.SaveChangesAsync();
 
-            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == registerViewModel.Email);
+            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == registerModel.Email);
 
-            var res = await _userManager.AddPasswordAsync(dbUser, registerViewModel.Password);
+            if (dbUser == null)
+            {
+                throw new InvalidOperationException("User not found after creation.");
+            }
 
-            //By Default assign new user's as Farmers when creating a new profile 
+            var res = await _userManager.AddPasswordAsync(dbUser, registerModel.Password);
             await _userManager.AddToRoleAsync(dbUser, UserRole.Farmers.GetDisplayName());
 
             return dbUser.Id;
+
         }
 
 

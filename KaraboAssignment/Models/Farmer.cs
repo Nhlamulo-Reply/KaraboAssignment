@@ -6,8 +6,8 @@ namespace KaraboAssignment.Models
     {
         [Key]
         public Guid FarmerId { get; set; }
-                
-        public string UserId { get; set; }
+
+        public string UserId { get; set; } // Stores ASP.NET User ID
 
         [Required]
         public string Name { get; set; }

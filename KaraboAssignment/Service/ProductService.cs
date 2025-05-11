@@ -8,64 +8,82 @@ namespace KaraboAssignment.Service
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProductService> _logger;
 
-        public ProductService(ApplicationDbContext context)
+        public ProductService(ApplicationDbContext context, ILogger<ProductService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task AddProductAsync(Product product)
+        public async Task AddProductAsync(Product model)
         {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
+            try
+            {
+                // Debug: Log the incoming model
+                _logger.LogInformation("Adding product with FarmerId: {FarmerId}", model.FarmerId);
+
+                var product = new Product
+                {
+                    ProductId = Guid.NewGuid(),
+                    ProductName = model.ProductName,
+                    Category = model.Category,
+                    ProductionDate = model.ProductionDate,
+                    Description = model.Description,
+                    Quantity = model.Quantity,
+                    FarmerId = model.FarmerId, // This should now have the correct value
+                    CreatedAt = DateTime.Now
+                };
+
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Product added successfully with ID: {ProductId}", product.ProductId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to add product with FarmerId: {FarmerId}", model.FarmerId);
+                throw;
+            }
         }
 
-        public Task<IEnumerable<Product>> FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<List<Product>> GetAllProducts()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Product>> GetFarmerProductsAsync(Guid farmerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<List<Product>> IProductService.FilterProductsAsync(string? category, DateTime? start, DateTime? end, Guid? farmerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        /* public async Task<IEnumerable<Product>> GetFarmerProductsAsync(Guid farmerId)
+        public async Task<List<Product>> GetAllProducts()
         {
             return await _context.Products
-                .Include(p => p.FarmerName)
-                .Where(p => p.FarmerId == farmerId)
+                .Include(p => p.Farmer)
+                .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
         }
 
-
-
-       public async Task<IEnumerable<Product>> IProductService.FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
+        public async Task<List<Product>> GetFarmerProductsAsync(Guid farmerId)
         {
-            var query = _context.Products.Include(p => p.FarmerName).AsQueryable();
+            return await _context.Products
+                .Include(p => p.Farmer)
+                .Where(p => p.FarmerId == farmerId)
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
+        }
 
-            if (!string.IsNullOrEmpty(category))
+        public async Task<List<Product>> FilterProductsAsync(string? category, DateTime? start, DateTime? end, Guid? farmerId)
+        {
+            var query = _context.Products
+                .Include(p => p.Farmer)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(category))
                 query = query.Where(p => p.Category.Contains(category));
 
-            if (start.HasValue && end.HasValue)
-                query = query.Where(p => p.ProductionDate >= start && p.ProductionDate <= end);
+            if (start.HasValue)
+                query = query.Where(p => p.ProductionDate >= start.Value);
+
+            if (end.HasValue)
+                query = query.Where(p => p.ProductionDate <= end.Value);
 
             if (farmerId.HasValue)
                 query = query.Where(p => p.FarmerId == farmerId.Value);
 
-            return await query.ToListAsync();
-        }*/
+            return await query.OrderByDescending(p => p.CreatedAt).ToListAsync();
+        }
     }
-
-
 }
