@@ -112,9 +112,8 @@ namespace KaraboAssignment.Controllers
 
                 var products = new Product
                 {
-                    Name = product.Name,
-                    Price = product.Price,
-                    FarmerName = farmer.Name,
+                    ProductName = product.ProductName,
+                    FarmerId = farmer.FarmerId,
                     
 
                 };

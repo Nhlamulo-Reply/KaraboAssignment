@@ -65,6 +65,7 @@ namespace KaraboAssignment.Service
 
             var res = await _userManager.AddPasswordAsync(dbUser, registerViewModel.Password);
 
+            //By Default assign new user's as Farmers when creating a new profile 
             await _userManager.AddToRoleAsync(dbUser, UserRole.Farmers.GetDisplayName());
 
             return dbUser.Id;
@@ -108,7 +109,7 @@ namespace KaraboAssignment.Service
                // _dbContext.Farmers.Add();
                 await _dbContext.SaveChangesAsync();
 
-                return farmerRecord.FarmerId;
+                return "farmerRecord.FarmerId";
             }
             catch (Exception ex)
             {

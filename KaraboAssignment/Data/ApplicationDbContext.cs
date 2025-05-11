@@ -36,6 +36,19 @@ namespace KaraboAssignment.Data
                     .HasForeignKey(ur => ur.RoleId)
                     .IsRequired();
             });
+
+            // Product → Farmer relationship
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Farmer)
+                .WithMany(f => f.Products)
+                .HasForeignKey(p => p.FarmerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // If you later have decimal fields like Price, use:
+            // modelBuilder.Entity<Product>()
+            //     .Property(p => p.Price)
+            //     .HasPrecision(18, 2);
+
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }

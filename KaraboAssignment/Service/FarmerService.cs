@@ -17,6 +17,12 @@ namespace KaraboAssignment.Service
           _logger = logger;
         
         }
+
+        public Task AddFarmerAsync(Farmer farmer)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task AddProductAsync(ProductViewModel product)
         {
             throw new NotImplementedException();
@@ -27,7 +33,17 @@ namespace KaraboAssignment.Service
             throw new NotImplementedException();
         }
 
+        public Task<List<Farmer>> GetAllFarmersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<ProductViewModel>> GetAllProductsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Farmer?> GetFarmerByIdAsync(Guid farmerId)
         {
             throw new NotImplementedException();
         }

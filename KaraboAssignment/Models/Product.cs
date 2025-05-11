@@ -1,38 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KaraboAssignment.Models
 {
     public class Product
     {
-        public int? ProductId { get; set; }
+        [Key]
+        public Guid ProductId { get; set; } = Guid.NewGuid(); 
+
         [Required]
-        public string? Name { get; set; }
-        public string? Category { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime ProductionDate { get; set; }
+        public string ProductName { get; set; }
 
-        public Farmer? Farmer { get; set; }
-
-        public Guid Id { get; set; }
-             
+        [Required]
+        public string Category { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Production Date")]
-  
-        public DateTime? ExpiryDate { get; set; }
-
+        public DateTime ProductionDate { get; set; }
+         
         public string Description { get; set; }
-
-        [DataType(DataType.Currency)]
-        public decimal Price { get; set; }
-
+            
         public int Quantity { get; set; }
 
-        [Display(Name = "Farmer")]
-        public string FarmerName { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        // Foreign key
+        [ForeignKey("Farmer")]
         public Guid FarmerId { get; set; }
 
-
+        // Navigation property
+        public Farmer Farmer { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KaraboAssignment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250502194736_InitialCreate")]
+    [Migration("20250511134805_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -138,13 +138,15 @@ namespace KaraboAssignment.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("KaraboAssignment.ViewModels.Farmer", b =>
+            modelBuilder.Entity("KaraboAssignment.Models.Farmer", b =>
                 {
-                    b.Property<int>("FarmerId")
+                    b.Property<Guid>("FarmerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FarmerId"));
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -154,31 +156,51 @@ namespace KaraboAssignment.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("FarmerId");
 
                     b.ToTable("Farmers");
                 });
 
-            modelBuilder.Entity("KaraboAssignment.ViewModels.Product", b =>
+            modelBuilder.Entity("KaraboAssignment.Models.Product", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Category")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FarmerId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("FarmerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ProductionDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductId");
 
@@ -297,11 +319,13 @@ namespace KaraboAssignment.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("KaraboAssignment.ViewModels.Product", b =>
+            modelBuilder.Entity("KaraboAssignment.Models.Product", b =>
                 {
-                    b.HasOne("KaraboAssignment.ViewModels.Farmer", "Farmer")
+                    b.HasOne("KaraboAssignment.Models.Farmer", "Farmer")
                         .WithMany("Products")
-                        .HasForeignKey("FarmerId");
+                        .HasForeignKey("FarmerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Farmer");
                 });
@@ -352,7 +376,7 @@ namespace KaraboAssignment.Migrations
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("KaraboAssignment.ViewModels.Farmer", b =>
+            modelBuilder.Entity("KaraboAssignment.Models.Farmer", b =>
                 {
                     b.Navigation("Products");
                 });

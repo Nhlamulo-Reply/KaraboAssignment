@@ -25,7 +25,22 @@ namespace KaraboAssignment.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Product>> GetFarmerProductsAsync(Guid farmerId)
+        public Task<List<Product>> GetAllProducts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Product>> GetFarmerProductsAsync(Guid farmerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<Product>> IProductService.FilterProductsAsync(string? category, DateTime? start, DateTime? end, Guid? farmerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        /* public async Task<IEnumerable<Product>> GetFarmerProductsAsync(Guid farmerId)
         {
             return await _context.Products
                 .Include(p => p.FarmerName)
@@ -35,7 +50,7 @@ namespace KaraboAssignment.Service
 
 
 
-       /* public async Task<IEnumerable<Product>> IProductService.FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
+       public async Task<IEnumerable<Product>> IProductService.FilterProductsAsync(string category, DateTime? start, DateTime? end, Guid? farmerId)
         {
             var query = _context.Products.Include(p => p.FarmerName).AsQueryable();
 

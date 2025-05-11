@@ -8,6 +8,11 @@ namespace KaraboAssignment.Service
         Task AddProductAsync(ProductViewModel product);
         Task DeleteProductAsync(int id);
         Task<ProductViewModel> GetProductByIdAsync(int id);
-     
+
+        // For Employees
+        public Task AddFarmerAsync(Farmer farmer);
+       public  Task<List<Farmer>> GetAllFarmersAsync();
+       public Task<Farmer?> GetFarmerByIdAsync(Guid farmerId);
+
     }
 }
