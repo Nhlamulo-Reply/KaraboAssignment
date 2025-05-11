@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Product>
+﻿@model List<Product>
 
 @{
     ViewData["Title"] = "Filter Products";
 }
 
-<nav aria-label="breadcrumb mt-4">
+<nav aria-label="breadcrumb" class="mt-4">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
         <li class="breadcrumb-item active" aria-current="page">Product Library</li>
@@ -37,12 +37,15 @@
                     <label class="form-label">Farmer</label>
                     <select name="farmerId" class="form-control">
                         <option value="">All Farmers</option>
-                        @foreach (var farmer in ViewBag.Farmers)
+                        @if (ViewBag.Farmers != null)
                         {
-                            <option value="@farmer.Id"
-                                    selected="@(Context.Request.Query["farmerId"] == farmer.Id.ToString())">
-                                @farmer.Name
-                            </option>
+                            foreach (var farmer in ViewBag.Farmers)
+                            {
+                                var isSelected = Context.Request.Query["farmerId"] == farmer.Id.ToString();
+                                <option value="@farmer.Id" selected="@(isSelected ? "selected" : null)">
+                                    @farmer.Name
+                                </option>
+                            }
                         }
                     </select>
                 </div>
@@ -60,9 +63,7 @@
                             <th>Name</th>
                             <th>Category</th>
                             <th>Production Date</th>
-                            <th>Expiry Date</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
+                             <th>Quantity</th>
                             <th>Farmer</th>
                         </tr>
                     </thead>
@@ -75,13 +76,15 @@
                         }
                         else
                         {
-                            @foreach (var product in Model)
+                            foreach (var product in Model)
                             {
                                 <tr>
                                     <td>@product.ProductName</td>
                                     <td>@product.Category</td>
                                     <td>@product.ProductionDate.ToShortDateString()</td>
                                     
+                                    <td>@product.Quantity</td>
+                                    <td>@product.Farmer?.Name</td>
                                 </tr>
                             }
                         }
@@ -101,7 +104,7 @@
                 responsive: true,
                 pageLength: 10,
                 lengthMenu: [5, 10, 25, 50, 100],
-                order: [[2, 'desc']] // Sort by Production Date by default
+                order: [[2, 'desc']] // Sort by Production Date
             });
         });
     </script>

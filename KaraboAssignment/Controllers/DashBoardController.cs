@@ -142,7 +142,28 @@ namespace KaraboAssignment.Controllers
 
 
 
+        public async Task<IActionResult> ViewProduct()
+        {
+            // Get the logged-in user
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
 
+            // Match user with Farmer
+            var farmer = await _dbContext.Farmers.FirstOrDefaultAsync(f => f.UserId == user.Id);
+            if (farmer == null)
+            {
+                TempData["Error"] = "Farmer profile not found.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Get the farmer's products using the service method
+            var products = await _productService.GetFarmerProductsAsync(farmer.FarmerId);
+
+            return View("ViewProduct", products); // Ensure you have a corresponding view
+        }
 
     }
 }
