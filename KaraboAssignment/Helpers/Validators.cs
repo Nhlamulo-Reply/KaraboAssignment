@@ -23,5 +23,10 @@ namespace KaraboAssignment.Helpers
 
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
+
+        public static bool IsValidCellphone(string cellphone)
+        {
+          return Regex.IsMatch(cellphone, @"^(0\d{9}|\+27\d{9})$");
+        }
     }
 }
