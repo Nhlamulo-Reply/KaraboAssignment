@@ -1,5 +1,5 @@
 ﻿using KaraboAssignment.Data;
-using KaraboAssignment.ViewModels;
+using KaraboAssignment.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace KaraboAssignment.Service
@@ -23,7 +23,9 @@ namespace KaraboAssignment.Service
             throw new NotImplementedException();
         }
 
-        public Task AddProductAsync(ProductViewModel product)
+ 
+
+        public Task AddProductAsync(Models.Product product)
         {
             throw new NotImplementedException();
         }
@@ -38,7 +40,7 @@ namespace KaraboAssignment.Service
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ProductViewModel>> GetAllProductsAsync()
+        public Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             throw new NotImplementedException();
         }
@@ -48,7 +50,22 @@ namespace KaraboAssignment.Service
             throw new NotImplementedException();
         }
 
-        public Task<ProductViewModel> GetProductByIdAsync(int id)
+        public Task<Product> GetProductByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<Farmer>> IFarmerService.GetAllFarmersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Models.Farmer?> IFarmerService.GetFarmerByIdAsync(Guid farmerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Models.Product> IFarmerService.GetProductByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

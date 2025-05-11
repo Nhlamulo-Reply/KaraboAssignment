@@ -1,6 +1,5 @@
 ﻿using KaraboAssignment.Data;
 using KaraboAssignment.Models;
-using KaraboAssignment.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace KaraboAssignment.Service

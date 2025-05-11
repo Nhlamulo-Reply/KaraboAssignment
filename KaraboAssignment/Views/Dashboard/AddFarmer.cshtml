@@ -1,7 +1,13 @@
-﻿@model KaraboAssignment.ViewModels.Farmer
+﻿@model Farmer
 
 <h2 class="text-success mb-3">Add New Farmer</h2>
 
+<nav aria-label="breadcrumb mt-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">  <a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Library</li>
+    </ol>
+</nav>
 
 <form asp-action="AddFarmer" method="post" class="p-4 bg-light border rounded">
     <div asp-validation-summary="All" class="text-danger mb-3"></div>
@@ -18,38 +24,33 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
-    <!-- If Products is a string, you can keep this. If it's a list, consider a different input. -->
+
+
     <div class="mb-3">
-        <label class="form-label fw-bold" asp-for="Products">Products</label>
-        <input asp-for="Products" class="form-control" placeholder="Enter product names" />
-        <span asp-validation-for="Products" class="text-danger"></span>
+        <label class="form-label fw-bold" asp-for="PhoneNumber ">PhoneNumber</label>
+        <input asp-for="PhoneNumber " class="form-control" placeholder="Enter product names" />
+        <span asp-validation-for="PhoneNumber " class="text-danger"></span>
     </div>
+
+
+
 
 
 
     <button type="submit" class="btn btn-success">Add Farmer</button>
 </form>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 @section Scripts {
-
-
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        document.getElementById('addProduct').onclick = function () {
-            var productsContainer = document.querySelector('.form-label:contains("Products")').parentElement;
-            var productIndex = productsContainer.querySelectorAll('.mb-3').length / 2; // Find the number of existing products
-
-            // Dynamically create new product fields
-            var productNameField = document.createElement('input');
-            productNameField.name = `Products[${productIndex}].Name`;
-            productNameField.placeholder = 'Enter product name';
-            productNameField.classList.add('form-control');
-            productsContainer.appendChild(productNameField);
-
-            var productPriceField = document.createElement('input');
-            productPriceField.name = `Products[${productIndex}].Price`;
-            productPriceField.placeholder = 'Enter product price';
-            productPriceField.classList.add('form-control');
-            productsContainer.appendChild(productPriceField);
-        };
+        $(function () {
+            var successMessage = '@TempData["Success"]';
+            if (successMessage) {
+                toastr.success(successMessage);
+            }
+        });
     </script>
 }

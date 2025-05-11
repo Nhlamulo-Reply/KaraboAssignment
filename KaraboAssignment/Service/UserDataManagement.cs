@@ -106,7 +106,7 @@ namespace KaraboAssignment.Service
                     //FarmerId = Guid.NewGuid(),
                     Name = farmer.Name,
                     Email = farmer.Email,
-                    //PhoneNumber = farmer.PhoneNumber,
+                    PhoneNumber = farmer.PhoneNumber,
                    // UserId = user.Id // Link to Identity user
                 };
 

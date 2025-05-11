@@ -1,5 +1,5 @@
 ﻿
-@model KaraboAssignment.ViewModels.RegisterViewModel
+@model RegisterViewModel
 
 @{
     ViewData["Title"] = "Register";
@@ -76,16 +76,7 @@
                                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                 </div>
 
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="acceptTerms" required />
-                                        <label class="form-check-label" for="acceptTerms">
-                                            I agree and accept the <a href="#">terms and conditions</a>
-                                        </label>
-                                        <div class="invalid-feedback">You must agree before submitting.</div>
-                                    </div>
-                                    <span asp-validation-for="Terms" class="text-danger"></span>
-                                </div>
+                           
 
                                 <div class="col-12">
                                     <button class="btn btn-primary w-100" type="submit">Create Account</button>

@@ -7,17 +7,17 @@ namespace KaraboAssignment.Models
         [Key]
         public Guid FarmerId { get; set; }
 
-        public string UserId { get; set; } // Stores ASP.NET User ID
+        public string? UserId { get; set; } 
 
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
 

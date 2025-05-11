@@ -52,19 +52,29 @@ namespace KaraboAssignment.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFarmer(Farmer farmer)
         {
-            _logger.LogInformation("Attempting to register farmer: {Farmer}", farmer);
 
             if (!ModelState.IsValid)
-                return View(farmer);
+            {
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        _logger.LogError("Model error in field {Field}: {ErrorMessage}", state.Key, error.ErrorMessage);
+                    }
+                }
+                return View("AddProducts", farmer);
+            }
+
 
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
                 var userId = await _usersIO.CreatFarmer(farmer);
-                _logger.LogInformation("Successfully created farmer with ID: {Id}", userId);
+                _logger.LogInformation("Successfully created farmer with ID: {Id}", farmer);
                 await transaction.CommitAsync();
-
-                return RedirectToAction("AdminIndex", "Dashboard");
+                TempData["Success"] = "Farmer added successfully!";
+              
+                return RedirectToAction("AddFarmer", "Dashboard");
             }
             catch (Exception ex)
             {
@@ -121,8 +131,8 @@ namespace KaraboAssignment.Controllers
                 // Assign the FarmerId to the product
                 productModel.FarmerId = farmer.FarmerId;
 
-        
-               await _productService.AddProductAsync(productModel);
+
+                await _productService.AddProductAsync(productModel);
 
 
                 // Commit DB transaction
@@ -162,7 +172,17 @@ namespace KaraboAssignment.Controllers
             // Get the farmer's products using the service method
             var products = await _productService.GetFarmerProductsAsync(farmer.FarmerId);
 
-            return View("ViewProduct", products); // Ensure you have a corresponding view
+            return View("ViewProduct", products);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterProducts(string? category, DateTime? startDate, DateTime? endDate, Guid? farmerId)
+        {
+            var products = await _productService.FilterProductsAsync(category, startDate, endDate, farmerId);
+
+            //ViewBag.Farmers = await _farmerService.GetAllFarmersAsync(); // Used in dropdown
+
+            return View(products); // Pass filtered product list to the view
         }
 
     }

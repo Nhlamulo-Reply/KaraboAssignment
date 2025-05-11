@@ -1,5 +1,5 @@
 ﻿using KaraboAssignment.Data;
-using KaraboAssignment.ViewModels;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

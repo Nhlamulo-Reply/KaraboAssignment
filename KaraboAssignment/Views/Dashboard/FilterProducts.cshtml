@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KaraboAssignment.ViewModels.ProductViewModel>
+﻿@model List<Product>
 
 @{
     ViewData["Title"] = "Filter Products";
@@ -7,7 +7,7 @@
 <nav aria-label="breadcrumb mt-4">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">  <a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Library</li>
+        <li class="breadcrumb-item active" aria-current="page">Filter Products</li>
     </ol>
 </nav>
 
@@ -51,6 +51,7 @@
             </form>
 
             <!-- Table of Filtered Products -->
+            <!-- Table of Filtered Products -->
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -58,27 +59,43 @@
                         <th>Category</th>
                         <th>Production Date</th>
                         <th>Farmer</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (Model == null || !Model.Any())
                     {
-                        <tr><td colspan="4" class="text-center">No products found.</td></tr>
+                        <tr><td colspan="5" class="text-center">No products found.</td></tr>
                     }
                     else
                     {
                         @foreach (var product in Model)
                         {
                             <tr>
-                                <td>@product.Name</td>
+                                <td>@product.ProductName</td>
                                 <td>@product.Category</td>
                                 <td>@product.ProductionDate.ToShortDateString()</td>
-                             
+                                <td>@product.Farmer.Name</td> 
+
+                                <td>
+                                    <!-- Edit Button -->
+                                    <a href="@Url.Action("EditProduct", new { ProductName = @product.ProductName })" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+
+                                    <!-- Delete Button -->
+                                    <a href="@Url.Action("DeleteProduct", new { ProductName = @product.ProductName })"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Are you sure you want to delete this product?');">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                </td>
                             </tr>
                         }
                     }
                 </tbody>
             </table>
+
         </div>
     </div>
 </section>
