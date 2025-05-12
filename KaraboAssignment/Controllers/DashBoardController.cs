@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using KaraboAssignment.Helpers;
 
 
 namespace KaraboAssignment.Controllers
@@ -65,6 +66,14 @@ namespace KaraboAssignment.Controllers
                 return View("AddProducts", farmer);
             }
 
+            if (!string.IsNullOrEmpty(farmer.PhoneNumber))
+            {
+                if (!Validators.IsValidCellphone(farmer.PhoneNumber))
+                {
+                    ModelState.AddModelError(string.Empty, "Enter a valid south african phone number phone number");
+                    return View(farmer);
+                }
+            }
 
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try

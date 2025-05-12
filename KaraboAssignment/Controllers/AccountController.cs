@@ -139,10 +139,21 @@ namespace KaraboAssignment.Controllers
                 {
                     if (!Validators.IsValidCellphone(registerViewModel.PhoneNumber))
                     {
-                        ModelState.AddModelError(string.Empty, "Enter a valid south african phone number phone number");
+                        ModelState.AddModelError(string.Empty, "Enter a valid south african  phone number");
                         return View(registerViewModel);
                     }
                 }
+
+
+                if (!string.IsNullOrEmpty(registerViewModel.Email))
+                {
+                    if (!Validators.IsValidCellphone(registerViewModel.Email))
+                    {
+                        ModelState.AddModelError(string.Empty, "Enter a valid email address  phone number");
+                        return View(registerViewModel);
+                    }
+                }
+
                 IDbContextTransaction transaction = _dbContext.Database.BeginTransaction();
                 try
                 {

@@ -6,7 +6,6 @@ namespace KaraboAssignment.Helpers
     public class Validators
     {
 
-
         public static bool IsValidPassword(string password)
         {
             bool length = password.Length > 7;
