@@ -134,6 +134,15 @@ namespace KaraboAssignment.Controllers
                         return View(registerViewModel);
                     }
                 }
+
+                if (!string.IsNullOrEmpty(registerViewModel.PhoneNumber))
+                {
+                    if (!Validators.IsValidCellphone(registerViewModel.PhoneNumber))
+                    {
+                        ModelState.AddModelError(string.Empty, "Enter a valid south african phone number phone number");
+                        return View(registerViewModel);
+                    }
+                }
                 IDbContextTransaction transaction = _dbContext.Database.BeginTransaction();
                 try
                 {

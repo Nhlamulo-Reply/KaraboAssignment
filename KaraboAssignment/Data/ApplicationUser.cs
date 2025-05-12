@@ -11,18 +11,18 @@ namespace KaraboAssignment.Data
 
        // public AccountStatus AccountStatus { get; set; }
 
-        public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+        public virtual ICollection<ApplicationUserRole>? UserRoles { get; set; }
     }
 
     public class ApplicationRole : IdentityRole
     {
-        public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+        public virtual ICollection<ApplicationUserRole>? UserRoles { get; set; }
     }
 
     public class ApplicationUserRole : IdentityUserRole<string>
     {
-        public virtual ApplicationUser User { get; set; }
-        public virtual ApplicationRole Role { get; set; }
+        public virtual ApplicationUser? User { get; set; }
+        public virtual ApplicationRole? Role { get; set; }
     }
 
 }
