@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using KaraboAssignment.Helpers;
+using KaraboAssignment.Enums;
 
 
 namespace KaraboAssignment.Controllers
@@ -53,7 +54,6 @@ namespace KaraboAssignment.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFarmer(Farmer farmer)
         {
-
             if (!ModelState.IsValid)
             {
                 foreach (var state in ModelState)
@@ -63,26 +63,24 @@ namespace KaraboAssignment.Controllers
                         _logger.LogError("Model error in field {Field}: {ErrorMessage}", state.Key, error.ErrorMessage);
                     }
                 }
-                return View("AddProducts", farmer);
+                return View("AddFarmer", farmer); // corrected view name
             }
 
-            if (!string.IsNullOrEmpty(farmer.PhoneNumber))
+            if (!string.IsNullOrEmpty(farmer.PhoneNumber) &&
+                !Validators.IsValidCellphone(farmer.PhoneNumber))
             {
-                if (!Validators.IsValidCellphone(farmer.PhoneNumber))
-                {
-                    ModelState.AddModelError(string.Empty, "Enter a valid south african phone number phone number");
-                    return View(farmer);
-                }
+                ModelState.AddModelError(string.Empty, "Enter a valid South African phone number.");
+                return View("AddFarmer", farmer); // corrected view name
             }
 
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var userId = await _usersIO.CreatFarmer(farmer);
-                _logger.LogInformation("Successfully created farmer with ID: {Id}", farmer);
+                var farmerId = await _usersIO.CreatFarmer(farmer);
+                _logger.LogInformation("Successfully created farmer with ID: {FarmerId}", farmerId);
                 await transaction.CommitAsync();
+
                 TempData["Success"] = "Farmer added successfully!";
-              
                 return RedirectToAction("AddFarmer", "Dashboard");
             }
             catch (Exception ex)
@@ -90,9 +88,11 @@ namespace KaraboAssignment.Controllers
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error registering farmer with email: {Email}", farmer.Email);
                 ModelState.AddModelError("", "An error occurred while registering the farmer.");
-                return View(farmer);
+                return View("AddFarmer", farmer); // corrected view name
             }
         }
+
+
 
         [HttpGet]
         public IActionResult AddProducts()
@@ -100,28 +100,15 @@ namespace KaraboAssignment.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> AddProduct(Product productModel)
         {
-
             if (!ModelState.IsValid)
-            {
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        _logger.LogError("Model error in field {Field}: {ErrorMessage}", state.Key, error.ErrorMessage);
-                    }
-                }
                 return View("AddProducts", productModel);
-            }
-
 
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                // Get the currently logged-in user
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
@@ -129,22 +116,28 @@ namespace KaraboAssignment.Controllers
                     return View("AddProducts", productModel);
                 }
 
-                // Match user with Farmer profile
-                var farmer = await _dbContext.Farmers.FirstOrDefaultAsync(f => f.UserId == user.Id);
+                // Find or create Farmer
+                var farmer = await _dbContext.Farmers
+                    .FirstOrDefaultAsync(f => f.IdentityUserId == user.Id);
+
                 if (farmer == null)
                 {
-                    ModelState.AddModelError("", "Farmer profile not found.");
-                    return View("AddProducts", productModel);
+                    farmer = new Farmer
+                    {
+                        FarmerId = Guid.NewGuid(),
+                        IdentityUserId = user.Id,
+                        Name = user.UserName ?? "Unknown",
+                        Email = user.Email
+                    };
+
+                    _dbContext.Farmers.Add(farmer);
+                    await _dbContext.SaveChangesAsync();
                 }
 
-                // Assign the FarmerId to the product
+                // Assign FarmerId to the product
                 productModel.FarmerId = farmer.FarmerId;
 
-
                 await _productService.AddProductAsync(productModel);
-
-
-                // Commit DB transaction
                 await transaction.CommitAsync();
 
                 TempData["Success"] = "Product added successfully!";
@@ -153,11 +146,15 @@ namespace KaraboAssignment.Controllers
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Failed to add product");
+                _logger.LogError(ex, "Error adding product.");
                 ModelState.AddModelError("", "An error occurred while adding the product.");
                 return View("AddProducts", productModel);
             }
         }
+
+
+
+
 
 
 
@@ -171,7 +168,8 @@ namespace KaraboAssignment.Controllers
             }
 
             // Match user with Farmer
-            var farmer = await _dbContext.Farmers.FirstOrDefaultAsync(f => f.UserId == user.Id);
+            var farmer = await _dbContext.Farmers
+                 .FirstOrDefaultAsync(f => f.IdentityUserId == user.Id);
             if (farmer == null)
             {
                 TempData["Error"] = "Farmer profile not found.";
@@ -189,7 +187,7 @@ namespace KaraboAssignment.Controllers
         {
             var products = await _productService.FilterProductsAsync(category, startDate, endDate, farmerId);
 
-            //ViewBag.Farmers = await _farmerService.GetAllFarmersAsync(); // Used in dropdown
+            //ViewBag.Farmers = await _farmerService.GetAllFarmersAsync();
 
             return View(products); // Pass filtered product list to the view
         }
