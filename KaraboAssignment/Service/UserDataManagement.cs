@@ -75,52 +75,49 @@ namespace KaraboAssignment.Service
 
         }
 
-
-        public async Task<string> CreatFarmer(Farmer farmer)
+        public async Task<Guid> CreatFarmer(Farmer farmer)
         {
             try
             {
-                // First create the Identity user
+                // 1. Create Identity User
                 var user = new ApplicationUser
                 {
                     UserName = farmer.Email,
                     Email = farmer.Email,
-                    Firstname = farmer.Name.Split(' ')[0],
-                    Lastname = farmer.Name.Split(' ').Length > 1 ? farmer.Name.Split(' ')[1] : "",
-               
+                    Firstname = farmer.Name?.Split(' ')[0],
+                    Lastname = farmer.Name?.Split(' ').Length > 1 ? farmer.Name.Split(' ')[1] : ""
                 };
 
                 var result = await _userManager.CreateAsync(user, "TempPassword123!");
 
                 if (!result.Succeeded)
-                {
-                    throw new Exception($"User creation failed: {string.Join(", ", result.Errors)}");
-                }
+                    throw new Exception($"User creation failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
 
-                // Add to Farmer role
+                // 2. Assign Role
                 await _userManager.AddToRoleAsync(user, UserRole.Farmers.GetDisplayName());
 
-                // Then create the Farmer record
-                var farmerRecord = new Farmer
+                // 3. Create Farmer entity with correct IdentityUserId
+                var farmerEntity = new Farmer
                 {
-                    //FarmerId = Guid.NewGuid(),
-                    Name = farmer.Name,
+                    FarmerId = Guid.NewGuid(),
+                    IdentityUserId = user.Id,
+                    Name = farmer.Name ?? "Unknown",
                     Email = farmer.Email,
                     PhoneNumber = farmer.PhoneNumber,
-                   // UserId = user.Id // Link to Identity user
+                    Address = farmer.Address
                 };
 
-               // _dbContext.Farmers.Add();
+                _dbContext.Farmers.Add(farmerEntity);
                 await _dbContext.SaveChangesAsync();
 
-                return "farmerRecord.FarmerId";
+                return farmerEntity.FarmerId;
             }
             catch (Exception ex)
             {
-                
-                throw;
+                throw new Exception("Failed to create farmer", ex);
             }
         }
+
 
         private async Task UpdateUserRole(ApplicationUser user, string newRole)
         {
