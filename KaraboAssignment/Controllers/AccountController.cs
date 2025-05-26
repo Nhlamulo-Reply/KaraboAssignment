@@ -147,7 +147,7 @@ namespace KaraboAssignment.Controllers
 
                 if (!string.IsNullOrEmpty(registerViewModel.Email))
                 {
-                    if (!Validators.IsValidCellphone(registerViewModel.Email))
+                    if (!Validators.IsValidEmail(registerViewModel.Email))
                     {
                         ModelState.AddModelError(string.Empty, "Enter a valid email address  phone number");
                         return View(registerViewModel);

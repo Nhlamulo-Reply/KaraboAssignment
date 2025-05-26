@@ -19,6 +19,7 @@ namespace KaraboAssignment.Models
 
         public string? Address { get; set; }
 
+        public string? IdentityUserId { get; set; }
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
 
         // Navigation property to Products

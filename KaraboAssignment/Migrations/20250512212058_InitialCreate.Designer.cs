@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace KaraboAssignment.Migrations
+namespace AgriEnergyConnect.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250511134805_InitialCreate")]
+    [Migration("20250512212058_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -145,7 +145,6 @@ namespace KaraboAssignment.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -157,14 +156,12 @@ namespace KaraboAssignment.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FarmerId");
@@ -186,7 +183,6 @@ namespace KaraboAssignment.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("FarmerId")

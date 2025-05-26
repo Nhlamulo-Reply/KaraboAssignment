@@ -19,7 +19,6 @@ namespace KaraboAssignment.Service
         {
             try
             {
-                // Debug: Log the incoming model
                 _logger.LogInformation("Adding product with FarmerId: {FarmerId}", model.FarmerId);
 
                 var product = new Product
@@ -30,7 +29,7 @@ namespace KaraboAssignment.Service
                     ProductionDate = model.ProductionDate,
                     Description = model.Description,
                     Quantity = model.Quantity,
-                    FarmerId = model.FarmerId, // This should now have the correct value
+                    FarmerId = model.FarmerId,
                     CreatedAt = DateTime.Now
                 };
 
@@ -45,6 +44,7 @@ namespace KaraboAssignment.Service
                 throw;
             }
         }
+
 
 
         public async Task<List<Product>> GetAllProducts()
