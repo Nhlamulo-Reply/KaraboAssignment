@@ -77,35 +77,13 @@ app.Run();
 /// </summary>
 /// <param name="roleManager">RoleManager for managing roles</param>
 /// <param name="userManager">UserManager for managing users</param>
-/*async Task CreateRolesAsync(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
-{
-    try
-    {
-        var roleNames = Enum.GetNames(typeof(UserRole));
 
-        foreach (var roleName in roleNames)
-        {
-            var roleExist = await roleManager.RoleExistsAsync(roleName);
-            if (!roleExist)
-            {
-                var role = new ApplicationRole { Name = roleName };
-                await roleManager.CreateAsync(role);
-            }
-        }
-    }
-    catch (Exception ex)
-    {
-        var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<Program>();
-        logger.LogError(ex, "An error occurred while creating roles.");
-    }
-}
-*/
 
 async Task CreateRolesAsync(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext)
 {
     try
     {
-        // 1. Create all roles from the enum
+       
         var roleNames = Enum.GetNames(typeof(UserRole));
         foreach (var roleName in roleNames)
         {
@@ -115,7 +93,7 @@ async Task CreateRolesAsync(RoleManager<ApplicationRole> roleManager, UserManage
             }
         }
 
-        // 2. Create default admin user if not exists
+
         var adminEmail = "admin@example.com";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -131,18 +109,18 @@ async Task CreateRolesAsync(RoleManager<ApplicationRole> roleManager, UserManage
                 EmailConfirmed = true
             };
 
-            // Save user to database first
+          
             dbContext.Users.Add(adminUser);
             await dbContext.SaveChangesAsync();
 
-            // Verify user was created
+         
             var dbAdmin = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
             if (dbAdmin == null)
             {
                 throw new InvalidOperationException("Admin user not found after creation.");
             }
 
-            // Set password and role
+           
             var passwordResult = await userManager.AddPasswordAsync(dbAdmin, "Admin@123");
             if (!passwordResult.Succeeded)
             {

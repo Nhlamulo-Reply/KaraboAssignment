@@ -1,44 +1,68 @@
-﻿@model Farmer
+﻿@model RegisterViewModel
 
 <h2 class="text-success mb-3">Add New Farmer</h2>
 
-<nav aria-label="breadcrumb mt-4">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">  <a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Library</li>
-    </ol>
-</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <nav aria-label="breadcrumb mt-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">  <a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-6">
+            <button type="button">Back</button>
+        </div>
+    </div>
 
-<form asp-action="AddFarmer" method="post" class="p-4 bg-light border rounded">
+</div>
+
+<form asp-action="AddFarmer" method="post" autocomplete="off" class="p-4 bg-light border rounded">
     <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
     <div class="mb-3">
-        <label class="form-label fw-bold" asp-for="Name">Farmer Name</label>
-        <input asp-for="Name" class="form-control" placeholder="Enter full name" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <label class="form-label fw-bold" asp-for="Firstname">Farmer Name</label>
+        <input asp-for="Firstname" class="form-control" placeholder="Enter full name" autocomplete="off" />
+        <span asp-validation-for="Firstname" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold" asp-for="Lastname">Farmer LastName</label>
+        <input asp-for="Lastname" class="form-control" placeholder="Enter full name" autocomplete="off" />
+        <span asp-validation-for="Lastname" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label class="form-label fw-bold" asp-for="Email">Email</label>
-        <input asp-for="Email" type="email" class="form-control" placeholder="Enter email address" />
+        <input asp-for="Email" type="email" class="form-control" placeholder="Enter email address" autocomplete="off" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
-
-
     <div class="mb-3">
-        <label class="form-label fw-bold" asp-for="PhoneNumber ">PhoneNumber</label>
-        <input asp-for="PhoneNumber " class="form-control" placeholder="Enter product names" />
-        <span asp-validation-for="PhoneNumber " class="text-danger"></span>
+        <label class="form-label fw-bold" asp-for="PhoneNumber">Phone Number</label>
+        <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" autocomplete="off" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label class="form-label fw-bold" asp-for="Password">Password</label>
+        <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" autocomplete="new-password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
 
-
-
-
+    <div class="mb-3">
+        <label class="form-label fw-bold" asp-for="ConfirmPassword">ConfirmPassword</label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" autocomplete="new-password" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
 
     <button type="submit" class="btn btn-success">Add Farmer</button>
 </form>
+
+
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

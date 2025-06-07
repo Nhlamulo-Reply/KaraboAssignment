@@ -57,7 +57,7 @@ namespace KaraboAssignment.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddFarmer(Farmer farmer)
+        public async Task<IActionResult> AddFarmer(RegisterViewModel farmer)
         {
 
             _logger.LogError($"Farmer  {farmer}");
@@ -76,7 +76,7 @@ namespace KaraboAssignment.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    _logger.LogError($"There was an error registering new account with email {farmer.Name}", ex);
+                    _logger.LogError($"There was an error registering new account with email {farmer.Lastname}", ex);
                 }
               
                 return RedirectToAction("AdminIndex", "Dashboard");

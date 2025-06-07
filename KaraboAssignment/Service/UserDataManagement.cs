@@ -75,7 +75,7 @@ namespace KaraboAssignment.Service
 
         }
 
-        public async Task<Guid> CreatFarmer(Farmer farmer)
+        public async Task<Guid> CreatFarmer(RegisterViewModel farmer)
         {
             try
             {
@@ -84,27 +84,26 @@ namespace KaraboAssignment.Service
                 {
                     UserName = farmer.Email,
                     Email = farmer.Email,
-                    Firstname = farmer.Name?.Split(' ')[0],
-                    Lastname = farmer.Name?.Split(' ').Length > 1 ? farmer.Name.Split(' ')[1] : ""
+                    Firstname = farmer.Firstname,
+                    Lastname = farmer.Lastname
+             
                 };
 
-                var result = await _userManager.CreateAsync(user, "TempPassword123!");
+                var result = await _userManager.CreateAsync(user,farmer.Password);
 
                 if (!result.Succeeded)
                     throw new Exception($"User creation failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
 
-                // 2. Assign Role
                 await _userManager.AddToRoleAsync(user, UserRole.Farmers.GetDisplayName());
 
-                // 3. Create Farmer entity with correct IdentityUserId
                 var farmerEntity = new Farmer
                 {
                     FarmerId = Guid.NewGuid(),
                     IdentityUserId = user.Id,
-                    Name = farmer.Name ?? "Unknown",
+                    Name = farmer.Firstname ?? "Unknown",
                     Email = farmer.Email,
                     PhoneNumber = farmer.PhoneNumber,
-                    Address = farmer.Address
+                 
                 };
 
                 _dbContext.Farmers.Add(farmerEntity);
@@ -117,7 +116,6 @@ namespace KaraboAssignment.Service
                 throw new Exception("Failed to create farmer", ex);
             }
         }
-
 
         private async Task UpdateUserRole(ApplicationUser user, string newRole)
         {
@@ -255,5 +253,6 @@ namespace KaraboAssignment.Service
             throw new NotImplementedException();
         }
 
+      
     }
 }

@@ -52,7 +52,7 @@ namespace KaraboAssignment.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFarmer(Farmer farmer)
+        public async Task<IActionResult> AddFarmer(RegisterViewModel farmer)
         {
             if (!ModelState.IsValid)
             {
@@ -63,20 +63,39 @@ namespace KaraboAssignment.Controllers
                         _logger.LogError("Model error in field {Field}: {ErrorMessage}", state.Key, error.ErrorMessage);
                     }
                 }
-                return View("AddFarmer", farmer); // corrected view name
+                return View("AddFarmer", farmer); 
             }
 
             if (!string.IsNullOrEmpty(farmer.PhoneNumber) &&
                 !Validators.IsValidCellphone(farmer.PhoneNumber))
             {
                 ModelState.AddModelError(string.Empty, "Enter a valid South African phone number.");
-                return View("AddFarmer", farmer); // corrected view name
+                return View("AddFarmer", farmer);
+            }
+
+            if (!string.IsNullOrEmpty(farmer.Password))
+            {
+                if (!Validators.IsValidPassword(farmer.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Password must 8 or more characters, upper case, lowecase, number, special characters!");
+                    return View("AddFarmer", farmer);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(farmer.Email))
+            {
+                if (!Validators.IsValidEmail(farmer.Email))
+                {
+                    ModelState.AddModelError(string.Empty, "Enter a valid email address ");
+                    return View(farmer);
+                }
             }
 
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
                 var farmerId = await _usersIO.CreatFarmer(farmer);
+
                 _logger.LogInformation("Successfully created farmer with ID: {FarmerId}", farmerId);
                 await transaction.CommitAsync();
 
@@ -88,7 +107,7 @@ namespace KaraboAssignment.Controllers
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error registering farmer with email: {Email}", farmer.Email);
                 ModelState.AddModelError("", "An error occurred while registering the farmer.");
-                return View("AddFarmer", farmer); // corrected view name
+                return View("AddFarmer", farmer); 
             }
         }
 

@@ -23,6 +23,7 @@ namespace KaraboAssignment.Models
 
         [Required]
         [DataType(DataType.Password)]
+
         [Compare("Password")]
         public string? ConfirmPassword { get; set; }
 
