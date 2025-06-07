@@ -17,10 +17,6 @@
     <!-- Toastr CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
-  
-
-
-    <!-- Local CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KaraboAssignment.styles.css" asp-append-version="true" />
 </head>
@@ -76,7 +72,7 @@
                   
                             <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+                          
                         }
                     </ul>
 
@@ -98,10 +94,10 @@
         <div class="container text-center">
             <p class="mb-1">&copy; @DateTime.Now.Year KaraboAssignment. All rights reserved.</p>
             <ul class="list-inline">
-                <li class="list-inline-item"><a href="/" class="text-light">Home</a></li>
-                <li class="list-inline-item"><a href="/Account/Login" class="text-light">Login</a></li>
-                <li class="list-inline-item"><a href="/Account/Register" class="text-light">Register</a></li>
-                <li class="list-inline-item"><a href="/Home/About" class="text-light">About</a></li>
+                <li class="list-inline-item"><a  class="text-light">Home</a></li>
+                <li class="list-inline-item"><a  class="text-light">Login</a></li>
+                <li class="list-inline-item"><a  class="text-light">Register</a></li>
+                <li class="list-inline-item"><a  class="text-light">About</a></li>
             </ul>
         </div>
     </footer>

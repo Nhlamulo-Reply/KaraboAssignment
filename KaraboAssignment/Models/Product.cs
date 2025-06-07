@@ -28,8 +28,6 @@ namespace KaraboAssignment.Models
         // Foreign key
         [ForeignKey("Farmer")]
         public Guid FarmerId { get; set; }
-
-        // Navigation property
         public Farmer? Farmer { get; set; }
     }
 

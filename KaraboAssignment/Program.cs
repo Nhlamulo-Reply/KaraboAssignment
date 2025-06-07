@@ -1,11 +1,9 @@
 using KaraboAssignment.Data;
 using KaraboAssignment.Enums;
-using KaraboAssignment.Helpers;
 using KaraboAssignment.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Security.Claims;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,12 +26,11 @@ builder.Services.AddScoped<IProductService, ProductService>();
 // Add controllers and views
 builder.Services.AddControllersWithViews();
 
-// Add logging
 builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -47,7 +44,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// Call CreateRolesAsync here to ensure it's done after the application has started
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -65,7 +61,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

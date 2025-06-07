@@ -4,12 +4,23 @@
     ViewData["Title"] = "Filter Products";
 }
 
-<nav aria-label="breadcrumb" class="mt-4">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item active" aria-current="page">My Products</li>
-    </ol>
-</nav>
+
+
+<div class="container mb-4">
+    <div class="row align-items-center mt-4">
+        <div class="col-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a asp-action="AdminIndex" asp-controller="Dashboard">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Products</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-action="AdminIndex" asp-controller="Dashboard" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+</div>
 
 <section class="section dashboard mt-4">
     <div class="card">

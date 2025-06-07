@@ -1,13 +1,11 @@
 ﻿using KaraboAssignment.Data;
 using KaraboAssignment.Enums;
-using KaraboAssignment.Helpers;
 using KaraboAssignment.Service;
 using KaraboAssignment.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Logging;
+
 
 namespace KaraboAssignment.Controllers
 {
@@ -48,8 +46,7 @@ namespace KaraboAssignment.Controllers
                 return View(model);
         
             var email = model.Email?.Trim();
-
-           
+                      
 
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -63,7 +60,6 @@ namespace KaraboAssignment.Controllers
             {
                 var user = await _usersIO.GetUserByEmail(email);
          
-
                 if (user == null)
                 {
                     _logger.LogWarning("User not found after successful login attempt: {Email}", email);
@@ -110,68 +106,6 @@ namespace KaraboAssignment.Controllers
             }
 
          return View(model);
-        }
-
-
-        public async Task<IActionResult> Register()
-        {
-            await _signInManager.SignOutAsync();
-            await HttpContext.SignOutAsync();
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                if (!string.IsNullOrEmpty(registerViewModel.Password))
-                {
-                    if (!Validators.IsValidPassword(registerViewModel.Password))
-                    {
-                        ModelState.AddModelError(string.Empty, "Password must 8 or more characters, upper case, lowecase, number, special characters!");
-                        return View(registerViewModel);
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(registerViewModel.PhoneNumber))
-                {
-                    if (!Validators.IsValidCellphone(registerViewModel.PhoneNumber))
-                    {
-                        ModelState.AddModelError(string.Empty, "Enter a valid south african  phone number");
-                        return View(registerViewModel);
-                    }
-                }
-
-
-                if (!string.IsNullOrEmpty(registerViewModel.Email))
-                {
-                    if (!Validators.IsValidEmail(registerViewModel.Email))
-                    {
-                        ModelState.AddModelError(string.Empty, "Enter a valid email address  phone number");
-                        return View(registerViewModel);
-                    }
-                }
-
-                IDbContextTransaction transaction = _dbContext.Database.BeginTransaction();
-                try
-                {
-                    var userId = await _usersIO.CreateUser(registerViewModel);
-               
-
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    _logger.LogError($"There was an error registering new account with email {registerViewModel.Email}", ex);
-                }
-                //return View();
-                var result = await _signInManager.PasswordSignInAsync(registerViewModel.Email, registerViewModel.Password, false, lockoutOnFailure: false);
-                return RedirectToAction("AdminIndex", "Dashboard");
-            }
-            return View();
         }
 
         [HttpPost]

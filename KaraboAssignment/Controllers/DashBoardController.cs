@@ -3,9 +3,6 @@ using KaraboAssignment.Service;
 using KaraboAssignment.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage;
-
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using KaraboAssignment.Helpers;
 using KaraboAssignment.Enums;
@@ -26,7 +23,7 @@ namespace KaraboAssignment.Controllers
             IProductService productService,
             ILogger<DashBoardController> logger,
             IUserDataManagement usersIO,
-              UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager)
         {
             _dbContext = context;
             _productService = productService;
@@ -39,11 +36,27 @@ namespace KaraboAssignment.Controllers
         {
             return View();
         }
-
-        public IActionResult AdminIndex()
+        public async Task<IActionResult> AdminIndex()
         {
+            var userId = _userManager.GetUserId(User);
+            var userName = User.Identity?.Name;
+            var roles = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User));
+
+            _logger.LogInformation("AdminIndex - UserId: {UserId}, UserName: {UserName}, Roles: {Roles}", userId, userName, string.Join(", ", roles));
+
+            // Optionally also check Farmer/Admin record
+            var farmer = await _dbContext.Farmers.FirstOrDefaultAsync(f => f.IdentityUserId == userId);
+            if (farmer == null && roles.Contains(UserRole.Farmers.GetDisplayName()))
+            {
+                _logger.LogWarning("No Farmer found for IdentityUserId {UserId}. Redirecting to AddFarmer.", userId);
+                return RedirectToAction("AddFarmer", "Dashboard");
+            }
+
+            
+
             return View();
         }
+
 
         [HttpGet]
         public IActionResult AddFarmer()
@@ -111,8 +124,6 @@ namespace KaraboAssignment.Controllers
             }
         }
 
-
-
         [HttpGet]
         public IActionResult AddProducts()
         {
@@ -135,7 +146,6 @@ namespace KaraboAssignment.Controllers
                     return View("AddProducts", productModel);
                 }
 
-                // Find or create Farmer
                 var farmer = await _dbContext.Farmers
                     .FirstOrDefaultAsync(f => f.IdentityUserId == user.Id);
 
@@ -153,7 +163,6 @@ namespace KaraboAssignment.Controllers
                     await _dbContext.SaveChangesAsync();
                 }
 
-                // Assign FarmerId to the product
                 productModel.FarmerId = farmer.FarmerId;
 
                 await _productService.AddProductAsync(productModel);
@@ -171,22 +180,15 @@ namespace KaraboAssignment.Controllers
             }
         }
 
-
-
-
-
-
-
         public async Task<IActionResult> ViewProduct()
         {
-            // Get the logged-in user
+         
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Unauthorized();
             }
-
-            // Match user with Farmer
+                       
             var farmer = await _dbContext.Farmers
                  .FirstOrDefaultAsync(f => f.IdentityUserId == user.Id);
             if (farmer == null)
@@ -194,8 +196,7 @@ namespace KaraboAssignment.Controllers
                 TempData["Error"] = "Farmer profile not found.";
                 return RedirectToAction("Index", "Home");
             }
-
-            // Get the farmer's products using the service method
+                     
             var products = await _productService.GetFarmerProductsAsync(farmer.FarmerId);
 
             return View("ViewProduct", products);
@@ -205,10 +206,8 @@ namespace KaraboAssignment.Controllers
         public async Task<IActionResult> FilterProducts(string? category, DateTime? startDate, DateTime? endDate, Guid? farmerId)
         {
             var products = await _productService.FilterProductsAsync(category, startDate, endDate, farmerId);
-
-            //ViewBag.Farmers = await _farmerService.GetAllFarmersAsync();
-
-            return View(products); // Pass filtered product list to the view
+           
+            return View(products); 
         }
 
     }

@@ -21,17 +21,19 @@
     }
     else if (User.Identity.IsAuthenticated)
     {
-        <div class="text-center mb-4">
-            <h2>Welcome</h2>
-            <p class="lead">You are logged in as <strong></strong></p>
-        </div>
+     
 
         <div class="row justify-content-center">
             @if (User.IsInRole(UserRole.Employees.GetDisplayName()))
             {
+                <div class="text-center mb-4">
+                    <h2>Welcome Admin</h2>
+
+                </div>
+
                 <div class="col-md-4">
                     <a asp-controller="Dashboard" asp-action="AddFarmer" class="btn btn-primary w-100 mb-3">
-                        👤 Add Farmer Profile
+                        Add Farmer Profile
                     </a>
                 </div>
                
@@ -44,15 +46,19 @@
 
             @if (User.IsInRole(UserRole.Farmers.GetDisplayName()))
             {
+                <div class="text-center mb-4">
+                    <h2>Welcome Farmer</h2>
+
+                </div>
               
                 <div class="col-md-4">
                     <a asp-controller="Dashboard" asp-action="AddProducts" class="btn btn-success w-100 mb-3">
-                        ➕ Add Product
+                        Add Product
                     </a>
                 </div>
                 <div class="col-md-4">
                     <a asp-controller="Dashboard" asp-action="ViewProduct" class="btn btn-success w-100 mb-3">
-                        ➕ View Product
+                        View Product
                     </a>
                 </div>
           
